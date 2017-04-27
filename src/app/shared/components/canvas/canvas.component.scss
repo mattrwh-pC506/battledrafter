@@ -2,4 +2,26 @@
   display: flex;
   justify-content: flex-end;
   width: 100%;
+  padding: 5px 10px;
+  position: absolute;
+  opacity: .5;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+$button-width: 50px;
+
+.c-canvas-button {
+  background-color: cornflowerblue;
+  color: white;
+  font-weight: bold;
+  font-size: 25px;
+  line-height: $button-width;
+  width: $button-width;
+  height: $button-width;
+  box-sizing: content-box;
+  border-radius: 100%;
+  cursor: pointer;
 }
