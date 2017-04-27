@@ -1,0 +1,8 @@
+.c-app-root {
+  position: absolute;
+  overflow: auto;
+  bottom: 0;
+  top: 0;
+  right: 0;
+  left: 0;
+}

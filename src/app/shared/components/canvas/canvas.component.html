@@ -1,0 +1,10 @@
+<div class="c-canvas-buttons">
+  <div>
+    <button (click)="zoom(-1)">-</button>
+    <button (click)="zoom(1)">+</button>
+  </div>
+</div>
+<canvas #batMapCanvas
+        [attr.height]="viewPortHeight + 'px'"
+        [attr.width]="viewPortWidth + 'px'">
+</canvas>
