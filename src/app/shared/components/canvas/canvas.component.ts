@@ -14,9 +14,14 @@ import {
 export class BatMapCanvasComponent {
   @ViewChild("batMapCanvas", { read: ElementRef })
   private _canvas: ElementRef;
-  private resizeTimeout: any;
 
-  private zoomLevel: number = 4;
+  private resizeTimeout: any;
+  private baseCellSize: number = 5;
+  private rootY: number = 0;
+  private rootX: number = 0;
+  private mouseClickState: string = "up";
+
+  private zoomLevel: number = 15;
 
   public ngAfterViewInit() {
     this.drawGrid();
@@ -28,6 +33,10 @@ export class BatMapCanvasComponent {
     this.resizeTimeout = setTimeout(() => {
       this.drawGrid();
     }, 20);
+  }
+
+  public get cellSize() {
+    return this.zoomLevel * this.baseCellSize;
   }
 
   public zoom(increment: number) {
@@ -72,16 +81,22 @@ export class BatMapCanvasComponent {
   public drawGrid() {
     this.clearGrid();
     this.setBackgroundColor();
-    for (let i = 5 * this.zoomLevel; i < this.cw; i += 5 * this.zoomLevel) {
-      this.ctx.moveTo(.5 + i, 0);
+    for (
+      let x = 0 * this.zoomLevel;
+      x < this.cw;
+      x += this.cellSize) {
+      this.ctx.moveTo(this.rootX + .5 + x, 0);
       this.ctx.lineWidth = 1;
-      this.ctx.lineTo(.5 + i, this.ch);
+      this.ctx.lineTo(this.rootX + .5 + x, this.ch);
     }
 
-    for (let x = 5 * this.zoomLevel; x < this.ch; x += 5 * this.zoomLevel) {
-      this.ctx.moveTo(0, .5 + x);
+    for (
+      let y = 0 * this.zoomLevel;
+      y < this.ch;
+      y += this.cellSize) {
+      this.ctx.moveTo(0, this.rootY + .5 + y);
       this.ctx.lineWidth = 1;
-      this.ctx.lineTo(this.cw, .5 + x);
+      this.ctx.lineTo(this.cw, this.rootY + .5 + y);
     }
 
     this.ctx.strokeStyle = "#b7b7b7";
@@ -96,4 +111,83 @@ export class BatMapCanvasComponent {
   public clearGrid() {
     this.ctx.beginPath();
   }
+
+  public onMouseDown(e) {
+    this.mouseClickState = "down";
+    if (this.isImageSelected) {
+      let imageHeight = this.cursorImage.getBoundingClientRect().height;
+      let imageWidth = this.cursorImage.getBoundingClientRect().width;
+      this.ctx.imageSmoothingEnabled = false;
+      this.ctx.drawImage(this.cursorImage, e.clientX - imageWidth / 2, e.clientY - imageHeight / 2);
+    }
+  }
+
+  public onMouseUp(e) {
+    this.mouseClickState = "up";
+  }
+
+  public onMouseMove(e) {
+    if (this.mouseClickState === "up") {
+      return;
+    } else if (this.mouseClickState === "down") {
+
+      if (this.rootX > this.cellSize) {
+        this.rootX = 0;
+      } else if (this.rootX < 0) {
+        this.rootX = this.cellSize;
+      } else {
+        this.rootX += e.movementX;
+      }
+
+      if (this.rootY > this.cellSize) {
+        this.rootY = 0;
+      } else if (this.rootY < 0) {
+        this.rootY = this.cellSize;
+      } else {
+        this.rootY += e.movementY;
+      }
+
+      this.drawGrid();
+    }
+  }
+
+  @ViewChild("cursorImage", { read: ElementRef })
+  private _cursorImage: ElementRef;
+  private iconImageUrl: string = "";
+  private iconImageTop: number = -1000;
+  private iconImageLeft: number = -1000;
+
+  public get cursorImage(): any {
+    return this._cursorImage.nativeElement;
+  }
+
+  public get isImageSelected(): boolean {
+    return this.iconImageUrl !== "";
+  }
+
+  public selectIcon(iconImageUrl, e): void {
+    this.iconImageUrl = iconImageUrl
+  }
+
+  public deselectIcon(): void {
+    this.iconImageUrl = "";
+  }
+
+  public followCursor(e) {
+    if (!!this._cursorImage) {
+      let imageHeight = this.cursorImage.getBoundingClientRect().height;
+      let imageWidth = this.cursorImage.getBoundingClientRect().width;
+      this.iconImageTop = e.clientY - imageHeight / 2;
+      this.iconImageLeft = e.clientX - imageWidth / 2;
+    }
+  }
+
+  public onCursorMove(e) {
+    if (this.mouseClickState !== "up") {
+      return;
+    } else if (this.isImageSelected && e.clientY > 125) {
+      this.followCursor(e);
+    }
+  }
+
 }

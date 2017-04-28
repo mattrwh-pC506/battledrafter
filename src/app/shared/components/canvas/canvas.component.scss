@@ -1,6 +1,7 @@
 .c-canvas-buttons {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   width: 100%;
   padding: 5px 10px;
   position: absolute;
@@ -24,4 +25,18 @@ $button-width: 50px;
   box-sizing: content-box;
   border-radius: 100%;
   cursor: pointer;
+}
+
+.c-canvas-clipart-icon {
+  width: $button-width;
+  height: $button-width;
+  cursor: pointer;
+  margin: 0 10px 0 0;
+}
+
+.c-canvas-clipart-cursor {
+  position: absolute;
+  height: 100px;
+  width: 100px;
+  opacity: .5;
 }

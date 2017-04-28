@@ -1,12 +1,31 @@
 <div class="c-canvas-buttons">
-  <div>
-    <button (click)="zoom(-1)"
-            class="c-canvas-button">-</button>
-    <button (click)="zoom(1)"
-            class="c-canvas-button">+</button>
-  </div>
+  <button (click)="deselectIcon()"
+          *ngIf="isImageSelected"
+          class="c-canvas-button">X</button>
+  <img (click)="selectIcon('assets/tree-04.svg', $event)"
+       class="c-canvas-clipart-icon"
+       src="assets/tree-04.svg" />
+  <button (click)="zoom(-1)"
+          class="c-canvas-button">-</button>
+  <button (click)="zoom(1)"
+          class="c-canvas-button">+</button>
 </div>
 <canvas #batMapCanvas
         [attr.height]="viewPortHeight + 'px'"
-        [attr.width]="viewPortWidth + 'px'">
+        [attr.width]="viewPortWidth + 'px'"
+        (mousedown)="onMouseDown($event)"
+        (mouseup)="onMouseUp($event)"
+        (mousemove)="onMouseMove($event)"
+        (window:mousemove)="onCursorMove($event)"
+        [style.cursor]="iconUrl">
 </canvas>
+<img #cursorImage
+     class="c-canvas-clipart-cursor"
+     [style.top.px]="iconImageTop"
+     [style.left.px]="iconImageLeft"
+     [height]="'100px'"
+     [width]="'100px'"
+     (mousedown)="onMouseDown($event)"
+     (mouseup)="onMouseUp($event)"
+     *ngIf="isImageSelected"
+     [src]="iconImageUrl" />
