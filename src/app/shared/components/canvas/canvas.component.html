@@ -5,9 +5,9 @@
   <img (click)="selectIcon('assets/tree-04.svg', $event)"
        class="c-canvas-clipart-icon"
        src="assets/tree-04.svg" />
-  <button (click)="zoom(-1)"
+  <button (click)="onZoom('out')"
           class="c-canvas-button">-</button>
-  <button (click)="zoom(1)"
+  <button (click)="onZoom('in')"
           class="c-canvas-button">+</button>
 </div>
 <canvas #batMapCanvas
@@ -16,6 +16,10 @@
         (mousedown)="onMouseDown($event)"
         (mouseup)="onMouseUp($event)"
         (mousemove)="onMouseMove($event)"
+        (window:keydown.ArrowLeft)="left()"
+        (window:keydown.ArrowRight)="right()"
+        (window:keydown.ArrowUp)="up()"
+        (window:keydown.ArrowDown)="down()"
         (window:mousemove)="onCursorMove($event)"
         [style.cursor]="iconUrl">
 </canvas>
