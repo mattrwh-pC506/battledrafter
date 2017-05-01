@@ -8,6 +8,11 @@ export class ConcreteClipartService implements ClipartService {
 
   public clipart: string[] = [
     "assets/images/clipart/tree-01.svg",
+    "assets/images/clipart/tree-02.png",
+    "assets/images/clipart/tree-03.png",
+    "assets/images/clipart/tree-05.png",
+    "assets/images/clipart/tree-06.png",
+    "assets/images/clipart/tree-07.png",
   ];
   private _selectedClipart: string = this.clipart[0];
   private _store: any[] = [];
