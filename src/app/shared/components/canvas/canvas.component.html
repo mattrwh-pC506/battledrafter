@@ -1,35 +1,62 @@
-<div class="c-canvas-buttons">
-  <button (click)="deselectIcon()"
-          *ngIf="isImageSelected"
-          class="c-canvas-button">X</button>
-  <img (click)="selectIcon('assets/tree-04.svg', $event)"
-       class="c-canvas-clipart-icon"
-       src="assets/tree-04.svg" />
+<!--Tools-->
+<div class="c-canvas-buttons"
+     *ngIf="!!batMapCanvas">
+  <a (click)="toggleSavedMaps()"
+     class="c-canvas-menu-link">Open</a>
+  <a (click)="saveMap()"
+     class="c-canvas-menu-link">Save</a>
+  <img (click)="selectBGTexture()"
+       class="c-canvas-tool-icon"
+       [src]="activeBGTextureIcon" />
+  <img (click)="selectClipart()"
+       class="c-canvas-tool-icon"
+       [src]="activeClipartIcon" />
   <button (click)="onZoom('out')"
           class="c-canvas-button">-</button>
   <button (click)="onZoom('in')"
           class="c-canvas-button">+</button>
 </div>
+
+<!--Main Canvas-->
 <canvas #batMapCanvas
         [attr.height]="viewPortHeight + 'px'"
         [attr.width]="viewPortWidth + 'px'"
         (mousedown)="onMouseDown($event)"
         (mouseup)="onMouseUp($event)"
         (mousemove)="onMouseMove($event)"
-        (window:keydown.ArrowLeft)="left()"
-        (window:keydown.ArrowRight)="right()"
-        (window:keydown.ArrowUp)="up()"
-        (window:keydown.ArrowDown)="down()"
-        (window:mousemove)="onCursorMove($event)"
-        [style.cursor]="iconUrl">
+        (window:mousemove)="onCursorMove($event)">
 </canvas>
+
+<!--Tool Type Picker-->
+<div class="c-canvas-tool-picker"
+     (mouseenter)="toggleCursorIcon()"
+     (mouseleave)="toggleCursorIcon()"
+     *ngIf="isToolActive">
+  <img *ngFor="let url of toolPalletes; let i = index;"
+       (click)="selectPallete(i)"
+       [class.is-selected]="palleteIsSelected(url)"
+       class="c-canvas-tool-picker__icon"
+       [src]="url" />
+</div>
+
+<!--Saved Maps Menu-->
+<div class="c-canvas-tool-picker"
+     (mouseenter)="toggleCursorIcon()"
+     (mouseleave)="toggleCursorIcon()"
+     *ngIf="isSavedMapsMenuVisible">
+  <a *ngFor="let maps of savedMaps(); let i = index;"
+     (click)="openMap(i)"
+     class="c-canvas-menu-link">File: {{i + 1}}</a>
+</div>
+
+<!--Transient Cursor Image-->
 <img #cursorImage
-     class="c-canvas-clipart-cursor"
-     [style.top.px]="iconImageTop"
-     [style.left.px]="iconImageLeft"
+     class="c-canvas-tool-cursor"
+     [style.top.px]="iconImageTop + 10"
+     [style.left.px]="iconImageLeft + 10"
      [height]="'100px'"
      [width]="'100px'"
+     *ngIf="isToolActive && displayCursorIfPossible"
      (mousedown)="onMouseDown($event)"
      (mouseup)="onMouseUp($event)"
-     *ngIf="isImageSelected"
-     [src]="iconImageUrl" />
+     [src]="cursorImageUrl" />

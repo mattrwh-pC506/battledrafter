@@ -4,6 +4,10 @@ import {
   ViewEncapsulation,
 } from "@angular/core";
 
+import {
+  ClipartService, BGTextureService,
+} from "./";
+
 
 @Component({
   selector: 'batmap-canvas',
@@ -13,23 +17,32 @@ import {
 })
 export class BatMapCanvasComponent {
   @ViewChild("batMapCanvas", { read: ElementRef })
-  private _canvas: ElementRef;
+  public _canvas: ElementRef;
+
+  public isToolActive: boolean = false;
+  public cursorImageUrl: string = "";
+  public displayCursorIfPossible: boolean = true;
+  public isSavedMapsMenuVisible: boolean = false;
 
   private resizeTimeout: any;
   private baseCellSize: number = 10;
-  private rootY: number = 0;
-  private rootX: number = 0;
   private mouseClickState: string = "up";
   private zoomLevel: number = 10;
   private mapOffsetX: number = 0;
   private mapOffsetY: number = 0;
 
-  private gridX: number = 0;
-  private gridY: number = 0;
-  private clipX: number = 0;
-  private clipY: number = 0;
+  public get activeClipartIcon(): string {
+    return this.clipartService.curSelection || "";
+  };
 
-  private store: any[] = [];
+  public get activeBGTextureIcon(): string {
+    return this.bgTextureService.curSelection || "";
+  }
+
+  constructor(
+    private clipartService: ClipartService,
+    private bgTextureService: BGTextureService,
+  ) { }
 
   public ngAfterViewInit() {
     this.ctx.imageSmoothingEnabled = false;
@@ -59,19 +72,9 @@ export class BatMapCanvasComponent {
       return;
     }
 
-    let zoomPercentage = this.zoomLevel / oldZoom;
-    let onZoom = true;
-    this.store.forEach((item) => {
-      item.realX += this.mapOffsetX - (this.mapOffsetX % 100);
-      item.realY += this.mapOffsetY - (this.mapOffsetY % 100);
-      item.realX *= zoomPercentage;
-      item.realY *= zoomPercentage;
-      item.zoomLevel = this.zoomLevel;
-    });
-    this.rootX = 0;
-    this.rootY = 0;
-    this.mapOffsetX = 0;
-    this.mapOffsetY = 0;
+    this.clipartService.onZoom(this.zoomLevel, oldZoom);
+    this.mapOffsetX = Math.floor(Math.floor(this.cw / this.cellSize) / 2);
+    this.mapOffsetY = Math.floor(Math.floor(this.ch / this.cellSize) / 2);
     this.render();
   }
 
@@ -107,25 +110,6 @@ export class BatMapCanvasComponent {
     return this.canvas.getBoundingClientRect().width;
   }
 
-  public offsetGrid(e: any): void {
-    if (this.rootX > this.cellSize) {
-      this.rootX = 0;
-    } else if (this.rootX < 0) {
-      this.rootX = this.cellSize;
-    } else {
-      this.rootX += e.movementX;
-    }
-
-    if (this.rootY > this.cellSize) {
-      this.rootY = 0;
-    } else if (this.rootY < 0) {
-      this.rootY = this.cellSize;
-    } else {
-      this.rootY += e.movementY;
-    }
-    console.log("Roots!", this.rootX, this.rootY)
-  }
-
   public drawBackground() {
     this.clearGrid();
     this.setBackgroundColor();
@@ -136,11 +120,11 @@ export class BatMapCanvasComponent {
   }
 
   public drawGrid() {
-    let offsetX = this.mapOffsetX % 100;
-    let offsetY = this.mapOffsetY % 100;
+    let offsetX = this.mapOffsetX % this.cellSize;
+    let offsetY = this.mapOffsetY % this.cellSize;
     for (
-      let x = 0 * this.zoomLevel;
-      x < this.cw;
+      let x = -1 * this.zoomLevel;
+      x < this.cw + this.cellSize;
       x += this.cellSize) {
       this.ctx.moveTo(offsetX + .5 + x, 0);
       this.ctx.lineWidth = 1;
@@ -148,8 +132,8 @@ export class BatMapCanvasComponent {
     }
 
     for (
-      let y = 0 * this.zoomLevel;
-      y < this.ch;
+      let y = -1 * this.zoomLevel;
+      y < this.ch + this.cellSize;
       y += this.cellSize) {
       this.ctx.moveTo(0, offsetY + .5 + y);
       this.ctx.lineWidth = 1;
@@ -171,16 +155,16 @@ export class BatMapCanvasComponent {
 
   public onMouseDown(e) {
     this.mouseClickState = "down";
-    if (this.isImageSelected) {
-      let realX = e.clientX + (this.mapOffsetX * -1);
-      let realY = e.clientY + (this.mapOffsetY * -1);
+    if (this.isToolActive) {
+      let realX = e.clientX + 10 + (this.mapOffsetX * -1);
+      let realY = e.clientY + 10 + (this.mapOffsetY * -1);
       if (realX % 2 !== 0) {
         realX += 1;
       }
       if (realY % 2 !== 0) {
         realY += 1;
       }
-      this.store.push({
+      this.clipartService.placeClipart({
         src: this.cursorImage.src,
         realHeight: this.cursorImage.height / this.zoomLevel,
         realWidth: this.cursorImage.width / this.zoomLevel,
@@ -188,37 +172,13 @@ export class BatMapCanvasComponent {
         realY: realY,
         realZoom: this.zoomLevel,
       });
-      this.drawAllClipart();
+      this.clipartService.drawAll(
+        this.ctx,
+        this.mapOffsetX,
+        this.mapOffsetY,
+        this.zoomLevel);
       this.drawGrid();
     }
-  }
-
-  public left() {
-    this.paneX(-5);
-  }
-
-  public right() {
-    this.paneX(5);
-  }
-
-  public up() {
-    this.paneY(-5);
-  }
-
-  public down() {
-    this.paneY(5);
-  }
-
-  public paneX(increment: number) {
-    this.mapOffsetX += increment;
-    this.rootX += increment;
-    this.render();
-  }
-
-  public paneY(increment: number) {
-    this.mapOffsetY += increment;
-    this.rootY += increment;
-    this.render();
   }
 
   public onMouseUp(e) {
@@ -226,21 +186,18 @@ export class BatMapCanvasComponent {
     this.drawGrid();
   }
 
-  public eventNumber: number = 0;
   public onMouseMove(e) {
     if (this.mouseClickState === "up") {
       return;
     } else if (this.mouseClickState === "down") {
       this.mapOffsetX += e.movementX;
       this.mapOffsetY += e.movementY;
-      this.offsetGrid(e);
       this.render();
     }
   }
 
   @ViewChild("cursorImage", { read: ElementRef })
-  private _cursorImage: ElementRef;
-  private iconImageUrl: string = "";
+  public _cursorImage: ElementRef;
   private iconImageTop: number = -1000;
   private iconImageLeft: number = -1000;
 
@@ -248,16 +205,26 @@ export class BatMapCanvasComponent {
     return this._cursorImage.nativeElement;
   }
 
-  public get isImageSelected(): boolean {
-    return this.iconImageUrl !== "";
+  public selectClipart(): void {
+    if (this.clipartService.toolActive) {
+      this.clipartService.deactivateTool();
+      this.clearCursor();
+    } else {
+      this.clipartService.activateTool();
+      let selection = this.clipartService.curSelection;
+      this.setCursor(selection);
+    }
   }
 
-  public selectIcon(iconImageUrl, e): void {
-    this.iconImageUrl = iconImageUrl
-  }
-
-  public deselectIcon(): void {
-    this.iconImageUrl = "";
+  public selectBGTexture(): void {
+    if (this.bgTextureService.toolActive) {
+      this.bgTextureService.deactivateTool();
+      this.clearCursor();
+    } else {
+      this.bgTextureService.activateTool();
+      let selection = this.bgTextureService.curSelection;
+      this.setCursor(selection, );
+    }
   }
 
   public followCursor(e) {
@@ -270,7 +237,7 @@ export class BatMapCanvasComponent {
   public onCursorMove(e) {
     if (this.mouseClickState !== "up") {
       return;
-    } else if (this.isImageSelected && e.clientY > 125) {
+    } else if (this.isToolActive && e.clientY > 125) {
       this.followCursor(e);
     }
   }
@@ -279,33 +246,77 @@ export class BatMapCanvasComponent {
     return coord - dimension / 2
   }
 
-  public drawAllClipart(onZoom?: boolean): void {
-    for (let i = 0; i < this.store.length; i++) {
-      this.drawClipart(i);
-    };
+  public clearCursor(): void {
+    this.isToolActive = false;
+    this.cursorImageUrl = "";
   }
 
-  public drawClipart(index: number) {
-    if (index >= this.store.length) {
-      return;
+  public setCursor(url: string) {
+    this.isToolActive = true;
+    this.cursorImageUrl = url;
+  }
+
+  public get toolPalletes(): string[] {
+    if (this.clipartService.toolActive) {
+      return this.clipartService.clipart;
+    } else if (this.bgTextureService.toolActive) {
+      return this.bgTextureService.textures;
     }
-    let item = this.store[index];
-    let img = new Image();
-    img.src = item.src;
+  }
 
+  public palleteIsSelected(selection: string) {
+    if (this.clipartService.toolActive) {
+      return this.clipartService.curSelection === selection;
+    } else if (this.bgTextureService.toolActive) {
+      return this.bgTextureService.curSelection === selection;
+    }
+  }
 
-    this.ctx.drawImage(
-      img,
-      (item.realX + this.mapOffsetX),
-      (item.realY + this.mapOffsetY),
-      item.realHeight * this.zoomLevel,
-      item.realWidth * this.zoomLevel,
-    );
+  public selectPallete(index: number): void {
+    if (this.clipartService.toolActive) {
+      this.clipartService.select(index);
+      this.cursorImageUrl = this.clipartService.curSelection;
+    } else if (this.bgTextureService.toolActive) {
+      this.bgTextureService.select(index);
+      this.cursorImageUrl = this.bgTextureService.curSelection;
+    }
+  }
+
+  public toggleCursorIcon() {
+    this.displayCursorIfPossible = !this.displayCursorIfPossible;
+  }
+
+  public saveMap(): void {
+    this.clipartService.save();
+  }
+
+  public toggleSavedMaps(): void {
+    this.isSavedMapsMenuVisible = !this.isSavedMapsMenuVisible;
+  }
+
+  public openMap(index: number) {
+    console.log(index)
+    this.clipartService.open(index);
+    this.render();
+  }
+
+  public savedMaps(): any[] {
+    if (this.clipartService.savedMaps()) {
+      let maps = JSON.parse(this.clipartService.savedMaps());
+      return maps;
+    } else {
+      return [];
+    }
   }
 
   public render() {
     this.drawBackground();
-    this.drawAllClipart();
+    this.clipartService.drawAll(
+      this.ctx,
+      this.mapOffsetX,
+      this.mapOffsetY,
+      this.zoomLevel);
     this.drawGrid();
+
   }
 }

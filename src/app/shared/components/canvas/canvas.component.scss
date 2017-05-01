@@ -12,31 +12,69 @@
   }
 }
 
-$button-width: 50px;
+$button-dimension: 50px;
 
 .c-canvas-button {
   background-color: cornflowerblue;
   color: white;
   font-weight: bold;
   font-size: 25px;
-  line-height: $button-width;
-  width: $button-width;
-  height: $button-width;
+  line-height: $button-dimension;
+  width: $button-dimension;
+  height: $button-dimension;
   box-sizing: content-box;
   border-radius: 100%;
   cursor: pointer;
 }
 
-.c-canvas-clipart-icon {
-  width: $button-width;
-  height: $button-width;
+.c-canvas-tool-icon {
+  width: $button-dimension;
+  height: $button-dimension;
   cursor: pointer;
   margin: 0 10px 0 0;
 }
 
-.c-canvas-clipart-cursor {
+.c-canvas-menu-link {
+  cursor: pointer;
+  margin: 0 10px 0 0;
+  text-decoration: None;
+
+  &:hover {
+    color: steelblue;
+  }
+}
+
+.c-canvas-tool-cursor {
   position: absolute;
   height: 100px;
   width: 100px;
   opacity: .5;
+}
+
+$tool-picker-dimension: 50px;
+
+.c-canvas-tool-picker {
+  position: absolute;
+  height: 200px;
+  width: 125px;
+  padding: 5px;
+  bottom: 10px;
+  right: 0;
+  display: flex;
+  align-content: flex-start;
+  background-color: white;
+  border-radius: 3px;
+  border: 1px solid black;
+  flex-wrap: wrap;
+}
+
+.c-canvas-tool-picker__icon {
+  cursor: pointer;
+  width: $tool-picker-dimension;
+  height: $tool-picker-dimension;
+  margin: 0 0 0 0;
+
+  &.is-selected {
+    border: 1px dashed blue;
+  }
 }
