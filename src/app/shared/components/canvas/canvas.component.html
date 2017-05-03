@@ -41,11 +41,9 @@
 
 <!--Saved Maps Menu-->
 <div class="c-canvas-tool-picker"
-     (mouseenter)="toggleCursorIcon()"
-     (mouseleave)="toggleCursorIcon()"
      *ngIf="isSavedMapsMenuVisible">
   <a *ngFor="let maps of savedMaps(); let i = index;"
-     (click)="openMap(i)"
+     (mousedown)="openMap(i)"
      class="c-canvas-menu-link">File: {{i + 1}}</a>
 </div>
 

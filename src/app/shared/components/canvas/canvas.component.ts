@@ -4,9 +4,8 @@ import {
   ViewEncapsulation,
 } from "@angular/core";
 
-import {
-  ClipartService, BGTextureService,
-} from "./";
+import { ClipartService } from "./clipart.service";
+import { BGTextureService } from "./bg-textures.service";
 
 
 @Component({
@@ -45,6 +44,10 @@ export class BatMapCanvasComponent {
   ) { }
 
   public ngAfterViewInit() {
+    this.ctx.mozImageSmoothingEnabled = false;
+    this.ctx.imageSmoothingQuality = "Medium";
+    this.ctx.webkitImageSmoothingEnabled = false;
+    this.ctx.msImageSmoothingEnabled = false;
     this.ctx.imageSmoothingEnabled = false;
     this.render();
   }
@@ -111,12 +114,7 @@ export class BatMapCanvasComponent {
   }
 
   public drawBackground() {
-    this.clearGrid();
     this.setBackgroundColor();
-  }
-
-  public panLeft() {
-
   }
 
   public drawGrid() {
@@ -150,6 +148,7 @@ export class BatMapCanvasComponent {
   }
 
   public clearGrid() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.beginPath();
   }
 
@@ -176,8 +175,9 @@ export class BatMapCanvasComponent {
         this.ctx,
         this.mapOffsetX,
         this.mapOffsetY,
-        this.zoomLevel);
-      this.drawGrid();
+        this.zoomLevel,
+      );
+      this.render();
     }
   }
 
@@ -315,13 +315,14 @@ export class BatMapCanvasComponent {
   }
 
   public render() {
+    this.clearGrid();
     this.drawBackground();
     this.clipartService.drawAll(
       this.ctx,
       this.mapOffsetX,
       this.mapOffsetY,
-      this.zoomLevel);
+      this.zoomLevel,
+    );
     this.drawGrid();
-
   }
 }

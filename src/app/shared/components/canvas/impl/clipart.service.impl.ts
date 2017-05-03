@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Provider } from "../../../types/angular.type";
-import { ClipartService } from "../";
+import { ClipartService } from "../clipart.service";
 
 
 @Injectable()
@@ -38,7 +38,7 @@ export class ConcreteClipartService implements ClipartService {
     return this._selectedClipart;
   }
 
-  public drawAll(ctx, offsetX, offsetY, zoomLevel): void {
+  public drawAll(ctx, offsetX, offsetY, zoomLevel): any {
     for (let i = 0; i < this._store.length; i++) {
       let clip = this._store[i];
       this.draw(clip, ctx, offsetX, offsetY, zoomLevel);
@@ -48,13 +48,12 @@ export class ConcreteClipartService implements ClipartService {
   public draw(clip, ctx, offsetX, offsetY, zoomLevel): void {
     let img = new Image();
     img.src = clip.src;
-
     ctx.drawImage(
       img,
       (clip.realX + offsetX),
       (clip.realY + offsetY),
-      clip.realHeight * zoomLevel,
       clip.realWidth * zoomLevel,
+      clip.realHeight * zoomLevel,
     );
   }
 

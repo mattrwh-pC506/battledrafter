@@ -1,3 +1,7 @@
+import { Injectable } from "@angular/core";
+
+
+@Injectable()
 export abstract class ClipartService {
   abstract clipart: string[];
   abstract select(index: number): void;
