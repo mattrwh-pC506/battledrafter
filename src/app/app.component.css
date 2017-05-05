@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
+
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -15,4 +18,8 @@
 
 .c-app-header {
   position: absolute;
+  font-family: 'Press Start 2P', cursive;
+  margin: 15px;
+  color: #a7bc9d;
+  z-index: 10;
 }

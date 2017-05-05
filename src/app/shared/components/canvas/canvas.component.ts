@@ -6,6 +6,7 @@ import {
 
 import { ClipartService } from "./clipart.service";
 import { BGTextureService } from "./bg-textures.service";
+import { GridService } from "./grid.service";
 
 
 @Component({
@@ -41,6 +42,7 @@ export class BatMapCanvasComponent {
   constructor(
     private clipartService: ClipartService,
     private bgTextureService: BGTextureService,
+    private gridService: GridService,
   ) { }
 
   public ngAfterViewInit() {
@@ -117,39 +119,9 @@ export class BatMapCanvasComponent {
     this.setBackgroundColor();
   }
 
-  public drawGrid() {
-    let offsetX = this.mapOffsetX % this.cellSize;
-    let offsetY = this.mapOffsetY % this.cellSize;
-    for (
-      let x = -1 * this.zoomLevel;
-      x < this.cw + this.cellSize;
-      x += this.cellSize) {
-      this.ctx.moveTo(offsetX + .5 + x, 0);
-      this.ctx.lineWidth = 1;
-      this.ctx.lineTo(offsetX + .5 + x, this.ch);
-    }
-
-    for (
-      let y = -1 * this.zoomLevel;
-      y < this.ch + this.cellSize;
-      y += this.cellSize) {
-      this.ctx.moveTo(0, offsetY + .5 + y);
-      this.ctx.lineWidth = 1;
-      this.ctx.lineTo(this.cw, offsetY + .5 + y);
-    }
-
-    this.ctx.strokeStyle = "#b7b7b7";
-    this.ctx.stroke();
-  }
-
   public setBackgroundColor() {
     this.ctx.fillStyle = "ghostwhite";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-  }
-
-  public clearGrid() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.beginPath();
   }
 
   public onMouseDown(e) {
@@ -183,7 +155,8 @@ export class BatMapCanvasComponent {
 
   public onMouseUp(e) {
     this.mouseClickState = "up";
-    this.drawGrid();
+    this.gridService.draw(this.ctx, this.mapOffsetX, this.mapOffsetY, this.cellSize, this.zoomLevel, this.cw, this.ch);
+
   }
 
   private evNum: number = 0;
@@ -315,7 +288,7 @@ export class BatMapCanvasComponent {
   }
 
   public render() {
-    this.clearGrid();
+    this.gridService.clear(this.canvas, this.ctx);
     this.drawBackground();
     this.clipartService.drawAll(
       this.ctx,
@@ -323,6 +296,6 @@ export class BatMapCanvasComponent {
       this.mapOffsetY,
       this.zoomLevel,
     );
-    this.drawGrid();
+    this.gridService.draw(this.ctx, this.mapOffsetX, this.mapOffsetY, this.cellSize, this.zoomLevel, this.cw, this.ch);
   }
 }

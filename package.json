@@ -10,7 +10,7 @@
     "pree2e": "webdriver-manager update --standalone false --gecko false",
     "e2e": "protractor",
     "build": "ng build",
-    "gh": "ng github-pages:deploy"
+    "gh": "ng build --prod --aot --base-href 'https://mattrwh.github.io/battlemapper/' && ngh"
   },
   "private": true,
   "dependencies": {
@@ -35,6 +35,7 @@
   "devDependencies": {
     "@types/jasmine": "2.5.40",
     "@types/node": "^6.0.59",
+    "angular-cli-ghpages": "^0.5.0",
     "codelyzer": "~2.0.0-beta.4",
     "copy-dir": "^0.3.0",
     "gulp": "^3.9.1",

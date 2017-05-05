@@ -6,6 +6,7 @@ import { Declaration, Import, Provider } from "../../types/angular.type";
 import {
   bgTextureServiceProvision,
   clipartServiceProvision,
+  gridServiceProvision,
 } from "./impl";
 
 
@@ -20,6 +21,7 @@ const BATTLE_MAP_IMPORTS: Import[] = [
 const BATTLE_MAP_PROVIDERS: Provider[] = [
   bgTextureServiceProvision,
   clipartServiceProvision,
+  gridServiceProvision,
 ];
 
 @NgModule({

@@ -7,7 +7,6 @@ import { ClipartService } from "../clipart.service";
 export class ConcreteClipartService implements ClipartService {
 
   public clipart: string[] = [
-    "assets/images/clipart/tree-01.svg",
     "assets/images/clipart/tree-02.png",
     "assets/images/clipart/tree-03.png",
     "assets/images/clipart/tree-05.png",
