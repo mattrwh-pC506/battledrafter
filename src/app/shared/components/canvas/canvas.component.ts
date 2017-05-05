@@ -162,14 +162,14 @@ export class BatMapCanvasComponent {
   private evNum: number = 0;
   public onMouseMove(e) {
     this.evNum += 1;
-    if (this.evNum % 2 !== 0) {
+    if (this.evNum % 5 !== 0) {
       return;
     }
     if (this.mouseClickState === "up") {
       return;
     } else if (this.mouseClickState === "down") {
-      this.mapOffsetX += e.movementX;
-      this.mapOffsetY += e.movementY;
+      this.mapOffsetX += e.movementX * 5;
+      this.mapOffsetY += e.movementY * 5;
       this.render();
     }
   }
