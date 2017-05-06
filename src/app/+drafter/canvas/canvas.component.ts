@@ -4,19 +4,21 @@ import {
   ViewEncapsulation,
 } from "@angular/core";
 
-import { ClipartService } from "./clipart.service";
-import { BGTextureService } from "./bg-textures.service";
-import { GridService } from "./grid.service";
+import { BackgroundService } from "../services/background";
+import { BGTextureService } from "../services/bg-textures";
+import { ClipartService } from "../services/clipart";
+import { GridService } from "../services/grid";
+import { ResetService } from "../services/reset";
 
 
 @Component({
-  selector: 'batmap-canvas',
+  selector: 'drafter-canvas',
   templateUrl: "canvas.component.html",
   styleUrls: ["./canvas.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class BatMapCanvasComponent {
-  @ViewChild("batMapCanvas", { read: ElementRef })
+export class CanvasComponent {
+  @ViewChild("canvasRef", { read: ElementRef })
   public _canvas: ElementRef;
 
   public isToolActive: boolean = false;
@@ -40,9 +42,11 @@ export class BatMapCanvasComponent {
   }
 
   constructor(
-    private clipartService: ClipartService,
+    private backgroundService: BackgroundService,
     private bgTextureService: BGTextureService,
+    private clipartService: ClipartService,
     private gridService: GridService,
+    private resetService: ResetService,
   ) { }
 
   public ngAfterViewInit() {
@@ -83,6 +87,7 @@ export class BatMapCanvasComponent {
     this.render();
   }
 
+  // stays
   public get viewPortWidth() {
     return window.innerWidth && document.documentElement.clientWidth ?
       Math.min(window.innerWidth, document.documentElement.clientWidth) :
@@ -91,6 +96,7 @@ export class BatMapCanvasComponent {
       document.getElementsByTagName('body')[0].clientWidth;
   }
 
+  // stays
   public get viewPortHeight() {
     return window.innerHeight && document.documentElement.clientHeight ?
       Math.min(window.innerHeight, document.documentElement.clientHeight) :
@@ -99,13 +105,16 @@ export class BatMapCanvasComponent {
       document.getElementsByTagName('body')[0].clientHeight;
   }
 
+  // stays
   public get canvas(): any {
     return this._canvas.nativeElement;
   }
 
+  // stays
   public get ctx(): any {
     return this.canvas.getContext('2d');
   }
+
 
   public get ch() {
     return this.canvas.getBoundingClientRect().height;
@@ -113,10 +122,6 @@ export class BatMapCanvasComponent {
 
   public get cw() {
     return this.canvas.getBoundingClientRect().width;
-  }
-
-  public drawBackground() {
-    this.setBackgroundColor();
   }
 
   public setBackgroundColor() {
@@ -242,11 +247,11 @@ export class BatMapCanvasComponent {
     }
   }
 
-  public palleteIsSelected(selection: string) {
+  public palleteIsSelected(index: number) {
     if (this.clipartService.toolActive) {
-      return this.clipartService.curSelection === selection;
+      return this.clipartService.selectedIndex === index;
     } else if (this.bgTextureService.toolActive) {
-      return this.bgTextureService.curSelection === selection;
+      return this.bgTextureService.selectedIndex === index;
     }
   }
 
@@ -288,8 +293,8 @@ export class BatMapCanvasComponent {
   }
 
   public render() {
-    this.gridService.clear(this.canvas, this.ctx);
-    this.drawBackground();
+    this.resetService.clear(this.canvas, this.ctx);
+    this.backgroundService.draw(this.canvas, this.ctx);
     this.clipartService.drawAll(
       this.ctx,
       this.mapOffsetX,

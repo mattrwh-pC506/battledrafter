@@ -1,4 +1,4 @@
-.c-canvas-buttons {
+.c-toolbar-buttons {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -17,7 +17,7 @@
 
 $button-dimension: 50px;
 
-.c-canvas-button {
+.c-toolbar-button {
   background-color: #a7bc9d;
   color: white;
   font-weight: bold;
@@ -31,14 +31,14 @@ $button-dimension: 50px;
   cursor: pointer;
 }
 
-.c-canvas-tool-icon {
+.c-toolbar-tool-icon {
   width: $button-dimension;
   height: $button-dimension;
   cursor: pointer;
   margin: 0 10px 0 0;
 }
 
-.c-canvas-menu-link {
+.c-toolbar-menu-link {
   cursor: pointer;
   margin: 0 10px 0 0;
   text-decoration: None;
@@ -48,7 +48,7 @@ $button-dimension: 50px;
   }
 }
 
-.c-canvas-tool-cursor {
+.c-toolbar-tool-cursor {
   position: absolute;
   height: 100px;
   width: 100px;
@@ -57,7 +57,7 @@ $button-dimension: 50px;
 
 $tool-picker-dimension: 50px;
 
-.c-canvas-tool-picker {
+.c-toolbar-tool-picker {
   position: absolute;
   height: 200px;
   width: 125px;
@@ -72,7 +72,7 @@ $tool-picker-dimension: 50px;
   flex-wrap: wrap;
 }
 
-.c-canvas-tool-picker__icon {
+.c-toolbar-tool-picker__icon {
   cursor: pointer;
   width: $tool-picker-dimension;
   height: $tool-picker-dimension;

@@ -1,24 +1,5 @@
-<!--Tools-->
-<div class="c-canvas-buttons"
-     *ngIf="!!batMapCanvas">
-  <a (click)="toggleSavedMaps()"
-     class="c-canvas-menu-link">Open</a>
-  <a (click)="saveMap()"
-     class="c-canvas-menu-link">Save</a>
-  <img (click)="selectBGTexture()"
-       class="c-canvas-tool-icon"
-       [src]="activeBGTextureIcon" />
-  <img (click)="selectClipart()"
-       class="c-canvas-tool-icon"
-       [src]="activeClipartIcon" />
-  <button (click)="onZoom('out')"
-          class="c-canvas-button">-</button>
-  <button (click)="onZoom('in')"
-          class="c-canvas-button">+</button>
-</div>
-
 <!--Main Canvas-->
-<canvas #batMapCanvas
+<canvas #canvasRef
         [attr.height]="viewPortHeight + 'px'"
         [attr.width]="viewPortWidth + 'px'"
         (mousedown)="onMouseDown($event)"
@@ -34,7 +15,7 @@
      *ngIf="isToolActive">
   <img *ngFor="let url of toolPalletes; let i = index;"
        (click)="selectPallete(i)"
-       [class.is-selected]="palleteIsSelected(url)"
+       [class.is-selected]="palleteIsSelected(i)"
        class="c-canvas-tool-picker__icon"
        [src]="url" />
 </div>

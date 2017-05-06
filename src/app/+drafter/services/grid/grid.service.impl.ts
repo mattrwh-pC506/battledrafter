@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { GridService } from "../grid.service";
+import { GridService } from "./grid.service";
 
 
 @Injectable()
@@ -28,11 +28,6 @@ export class ConcreteGridService implements GridService {
 
     ctx.strokeStyle = "#b7b7b7";
     ctx.stroke();
-  }
-
-  public clear(canvas, ctx): void {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.beginPath();
   }
 }
 

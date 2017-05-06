@@ -1,10 +1,10 @@
-import { BattlemapperPage } from './app.po';
+import { BattledrafterPage } from './app.po';
 
-describe('battlemapper App', function() {
-  let page: BattlemapperPage;
+describe('battledrafter App', function() {
+  let page: BattledrafterPage;
 
   beforeEach(() => {
-    page = new BattlemapperPage();
+    page = new BattledrafterPage();
   });
 
   it('should display message saying app works', () => {

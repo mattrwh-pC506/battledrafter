@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Provider } from "../../../types/angular.type";
-import { ClipartService } from "../clipart.service";
+import { Provider } from "lupine-angular/src/app/types/angular.type";
+import { ClipartService } from "./clipart.service";
 
 
 @Injectable()
@@ -12,8 +12,43 @@ export class ConcreteClipartService implements ClipartService {
     "assets/images/clipart/tree-05.png",
     "assets/images/clipart/tree-06.png",
     "assets/images/clipart/tree-07.png",
+    "assets/images/clipart/tree-02.png",
+    "assets/images/clipart/tree-03.png",
+    "assets/images/clipart/tree-05.png",
+    "assets/images/clipart/tree-06.png",
+    "assets/images/clipart/tree-07.png",
+    "assets/images/clipart/tree-02.png",
+    "assets/images/clipart/tree-03.png",
+    "assets/images/clipart/tree-05.png",
+    "assets/images/clipart/tree-06.png",
+    "assets/images/clipart/tree-07.png",
+    "assets/images/clipart/tree-02.png",
+    "assets/images/clipart/tree-03.png",
+    "assets/images/clipart/tree-05.png",
+    "assets/images/clipart/tree-06.png",
+    "assets/images/clipart/tree-07.png",
+    "assets/images/clipart/tree-02.png",
+    "assets/images/clipart/tree-03.png",
+    "assets/images/clipart/tree-05.png",
+    "assets/images/clipart/tree-06.png",
+    "assets/images/clipart/tree-07.png",
+    "assets/images/clipart/tree-02.png",
+    "assets/images/clipart/tree-03.png",
+    "assets/images/clipart/tree-05.png",
+    "assets/images/clipart/tree-06.png",
+    "assets/images/clipart/tree-07.png",
+    "assets/images/clipart/tree-02.png",
+    "assets/images/clipart/tree-03.png",
+    "assets/images/clipart/tree-05.png",
+    "assets/images/clipart/tree-06.png",
+    "assets/images/clipart/tree-07.png",
+    "assets/images/clipart/tree-02.png",
+    "assets/images/clipart/tree-03.png",
+    "assets/images/clipart/tree-05.png",
+    "assets/images/clipart/tree-06.png",
+    "assets/images/clipart/tree-07.png",
   ];
-  private _selectedClipart: string = this.clipart[0];
+  public selectedIndex: number = 0;
   private _store: any[] = [];
   private cursorIcon: string = "";
 
@@ -22,7 +57,7 @@ export class ConcreteClipartService implements ClipartService {
   }
 
   public activateTool() {
-    this.cursorIcon = this._selectedClipart;
+    this.cursorIcon = this.curSelection;
   }
 
   public deactivateTool() {
@@ -30,11 +65,11 @@ export class ConcreteClipartService implements ClipartService {
   }
 
   public select(index: number): void {
-    this._selectedClipart = this.clipart[index];
+    this.selectedIndex = index;
   }
 
   public get curSelection(): string {
-    return this._selectedClipart;
+    return this.clipart[this.selectedIndex];
   }
 
   public drawAll(ctx, offsetX, offsetY, zoomLevel): any {
@@ -44,15 +79,15 @@ export class ConcreteClipartService implements ClipartService {
     };
   }
 
-  public draw(clip, ctx, offsetX, offsetY, zoomLevel): void {
+  public draw(item, ctx, offsetX, offsetY, zoomLevel): void {
     let img = new Image();
-    img.src = clip.src;
+    img.src = item.src;
     ctx.drawImage(
       img,
-      (clip.realX + offsetX),
-      (clip.realY + offsetY),
-      clip.realWidth * zoomLevel,
-      clip.realHeight * zoomLevel,
+      (item.realX + offsetX),
+      (item.realY + offsetY),
+      item.realWidth * zoomLevel,
+      item.realHeight * zoomLevel,
     );
   }
 

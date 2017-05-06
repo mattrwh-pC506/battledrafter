@@ -1,6 +1,6 @@
 import { browser, element, by } from 'protractor';
 
-export class BattlemapperPage {
+export class BattledrafterPage {
   navigateTo() {
     return browser.get('/');
   }
