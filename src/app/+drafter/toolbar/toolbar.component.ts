@@ -1,14 +1,17 @@
 import {
-  Component, ViewChild,
-  ElementRef, HostListener,
-  ViewEncapsulation,
+  Component, ViewEncapsulation, Input
 } from "@angular/core";
 
-import { BackgroundService } from "../services/background";
-import { BGTextureService } from "../services/bg-textures";
-import { ClipartService } from "../services/clipart";
-import { GridService } from "../services/grid";
-import { ResetService } from "../services/reset";
+import { ActiveToolService } from "../services/active-tool/active-tool.service";
+import { BGTextureService } from "../services/bg-textures/bg-textures.service";
+import { ClipartService } from "../services/clipart/clipart.service";
+import { GridService } from "../services/grid/grid.service";
+import { MapViewCtxService } from "../services/map-view-ctx/map-view-ctx.service";
+import { RendererService } from "../services/renderer/renderer.service";
+import { ZoomService } from "../services/zoom/zoom.service";
+
+import { CanvasComponent } from "../canvas/canvas.component";
+import { CursorImgComponent } from "../cursor-img/cursor-img.component";
 
 
 @Component({
@@ -16,89 +19,65 @@ import { ResetService } from "../services/reset";
   templateUrl: "toolbar.component.html",
   styleUrls: ["./toolbar.component.scss"],
   encapsulation: ViewEncapsulation.None,
+  host: {
+    "class": "c-toolbar-buttons"
+  }
 })
 export class ToolbarComponent {
+  @Input("canvas") private canvasComponent: CanvasComponent;
+  @Input("cursorImg") private cursorImg: CursorImgComponent;
 
-  public isToolActive: boolean = false;
-  public cursorImageUrl: string = "";
-  public displayCursorIfPossible: boolean = true;
-
-  private baseCellSize: number = 10;
-  private zoomLevel: number = 10;
-  private mapOffsetX: number = 0;
-  private mapOffsetY: number = 0;
+  public isSavedMapsMenuVisible: boolean = false;
 
   constructor(
     private activeToolService: ActiveToolService,
+    private clipartService: ClipartService,
+    private bgTextureService: BGTextureService,
+    private gridService: GridService,
+    private mapViewCtxService: MapViewCtxService,
+    private rendererService: RendererService,
+    private zoomService: ZoomService,
   ) { }
 
-  public ngAfterViewInit() { }
-
-  public get cellSize() {
-    return this.zoomLevel * this.baseCellSize;
-  }
-
-  // KEEP
   public onZoom(zoomType: string) {
-    let oldZoom: number = this.zoomLevel;
+    let oldZoom: number = this.zoomService.zoomLevel;
 
     if (zoomType === "in") {
-      this.zoomLevel += 2;
-    } else if (zoomType === "out" && this.zoomLevel !== 2) {
-      this.zoomLevel += -2;
+      this.zoomService.zoomLevel += 2;
+    } else if (zoomType === "out" && this.zoomService.zoomLevel !== 2) {
+      this.zoomService.zoomLevel += -2;
     } else {
       return;
     }
 
-    this.clipartService.onZoom(this.zoomLevel, oldZoom);
-    this.mapOffsetX = Math.floor(Math.floor(this.cw / this.cellSize) / 2);
-    this.mapOffsetY = Math.floor(Math.floor(this.ch / this.cellSize) / 2);
-    this.render();
-  }
-
-  @ViewChild("cursorImage", { read: ElementRef })
-  public _cursorImage: ElementRef;
-  private iconImageTop: number = -1000;
-  private iconImageLeft: number = -1000;
-
-  public get cursorImage(): any {
-    return this._cursorImage.nativeElement;
+    this.clipartService.onZoom(this.zoomService.zoomLevel, oldZoom);
+    this.mapViewCtxService.offsetX = Math.floor(
+      Math.floor(this.mapViewCtxService.width / this.gridService.cellSize) / 2);
+    this.mapViewCtxService.offsetY = Math.floor(
+      Math.floor(this.mapViewCtxService.height / this.gridService.cellSize) / 2);
+    this.rendererService.render(this.canvasComponent.ctx, this.canvasComponent.canvas);
   }
 
   public selectClipart(): void {
     if (this.clipartService.toolActive) {
-      this.clipartService.deactivateTool();
-      this.clearCursor();
+      this.clipartService.deactivateTool()
+      this.cursorImg.clearCursor();
     } else {
       this.clipartService.activateTool();
       let selection = this.clipartService.curSelection;
-      this.setCursor(selection);
+      this.cursorImg.setCursor(selection);
     }
   }
 
   public selectBGTexture(): void {
     if (this.bgTextureService.toolActive) {
       this.bgTextureService.deactivateTool();
-      this.clearCursor();
+      this.cursorImg.clearCursor();
     } else {
       this.bgTextureService.activateTool();
       let selection = this.bgTextureService.curSelection;
-      this.setCursor(selection, );
+      this.cursorImg.setCursor(selection, );
     }
-  }
-
-  public centeredCoord(coord: number, dimension: number) {
-    return coord - dimension / 2
-  }
-
-  public clearCursor(): void {
-    this.isToolActive = false;
-    this.cursorImageUrl = "";
-  }
-
-  public setCursor(url: string) {
-    this.isToolActive = true;
-    this.cursorImageUrl = url;
   }
 
   public get toolPalletes(): string[] {
@@ -109,25 +88,51 @@ export class ToolbarComponent {
     }
   }
 
-  public palleteIsSelected(selection: string) {
+  public palleteIsSelected(index: number) {
     if (this.clipartService.toolActive) {
-      return this.clipartService.curSelection === selection;
+      return this.clipartService.selectedIndex === index;
     } else if (this.bgTextureService.toolActive) {
-      return this.bgTextureService.curSelection === selection;
+      return this.bgTextureService.selectedIndex === index;
     }
   }
 
   public selectPallete(index: number): void {
     if (this.clipartService.toolActive) {
       this.clipartService.select(index);
-      this.cursorImageUrl = this.clipartService.curSelection;
+      this.cursorImg.url = this.clipartService.curSelection;
     } else if (this.bgTextureService.toolActive) {
       this.bgTextureService.select(index);
-      this.cursorImageUrl = this.bgTextureService.curSelection;
+      this.cursorImg.url = this.bgTextureService.curSelection;
+    }
+  }
+
+  public get displayMenu(): boolean {
+    return this.activeToolService.isToolActive;
+  }
+
+  public saveMap(): void {
+    this.clipartService.save();
+  }
+
+  public toggleSavedMaps(): void {
+    this.isSavedMapsMenuVisible = !this.isSavedMapsMenuVisible;
+  }
+
+  public openMap(index: number) {
+    this.clipartService.open(index);
+    this.rendererService.render(this.canvasComponent.ctx, this.canvasComponent.canvas);
+  }
+
+  public savedMaps(): any[] {
+    if (this.clipartService.savedMaps()) {
+      let maps = JSON.parse(this.clipartService.savedMaps());
+      return maps;
+    } else {
+      return [];
     }
   }
 
   public toggleCursorIcon() {
-    this.displayCursorIfPossible = !this.displayCursorIfPossible;
+    this.cursorImg.toggleCursorIcon();
   }
 }

@@ -1,7 +1,6 @@
-<div class="c-canvas-buttons"
-     *ngIf="!!canvasRef">
+<div>
   <a (click)="toggleSavedMaps()"
-     class="c-canvas-menu-link">
+     class="c-toolbar-menu-link">
     <!-- Open Folder Filled icon by Icons8 -->
     <img class="icon icons8-Open-Folder-Filled"
          width="40"
@@ -9,14 +8,14 @@
          src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0iI2E3YmM5ZCIgPiAgICA8cGF0aCBkPSJNIDMgNCBDIDEuMzQ2IDQgMCA1LjM0NiAwIDcgTCAwIDMzLjA5Mzc1IEMgMS40NjQgMjUuMjk4NzUgMy4xMDQ1IDE2LjU1MiAzLjE4NzUgMTYuMTI1IEMgMy42OTU1IDEzLjUzNSA1LjY0OTUgMTIgOC40Mzc1IDEyIEwgNDcgMTIgTCA0NyAxMSBDIDQ3IDkuMzQ2IDQ1LjY1NCA4IDQ0IDggTCAxOC4wMzEyNSA4IEMgMTcuNzUyMjUgNy44OTkgMTcuMTg1IDYuOTk0IDE2Ljg3NSA2LjUgQyAxNi4xMDYgNS4yNzUgMTUuMzE3IDQgMTQgNCBMIDMgNCB6IE0gOC40Mzc1IDE0IEMgNy4xNTc1IDE0IDUuNTY0MjUgMTQuNDQ4MjUgNS4xNTYyNSAxNi41MzEyNSBDIDUuMDI5MjUgMTcuMTc4MjUgMS4xMzIgMzcuOTEwNSAwIDQzLjkzNzUgTCAwIDQ0IEMgMCA0NS42NTQgMS4zNDYgNDcgMyA0NyBMIDQyIDQ3IEMgNDMuNjIgNDcgNDQuOTQ3IDQ1LjcwMTc1IDQ1IDQ0LjA5Mzc1IEwgNDkuOTY4NzUgMTcuMTg3NSBMIDUwIDE3IEMgNTAgMTUuMzQ2IDQ4LjY1NCAxNCA0NyAxNCBMIDguNDM3NSAxNCB6Ij48L3BhdGg+PC9zdmc+' />
   </a>
   <a (click)="saveMap()"
-     class="c-canvas-menu-link">
+     class="c-toolbar-menu-link">
     <img class="icon icons8-Save-Filled"
          width="40"
          height="40"
          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAACHUlEQVRoQ+2aS1LCQBCGuxMWuhJPIJ5APYFSBXtdwgoq7NUTGE8AByAFK1h6gFCFnkA8gXoCcKULoK1ATQyYZGYgD0INW+bR3//3THcgCHvywT3hgBWQnm01EeEaAAppAxLR6DCnF2+K9YlILC5Ib9BuIeCtyKSkxsjAeECsMQLkg4IkghfMabVKsf4RF0h/2CnQdN5FhEu2hyiMC9IfWBQaoK6dxgnB9nZgYDZ/98YiAiMMUikZkV0MPbv9iojnXtWr5caFC+MjKg8mFRA/971CBWVHGEymQBzHgmAyBxIEk0kQP5jMgjAYdklkGsSBYZeEAtmmum96/frtqRzZxglP5R4BwJlnrbdKyXArPbdd8kyUduRA145FW+ptYP16rbD1pEEA6Bl0vR5n47iEmHUA8EpUjA1ARJdOdpwCSVZv/m7KEb5GyY5QjiSrN383eUeIvgjQPMxp3bgL49Owk/+ezmsIZALiUaQFkQjuq2WjxdcouhE927pDhGakIEm1KN6gHWd+ZvNxpCBR/hwk4xmvgZQ+IwpERn6fscqRIAFVaqnUWiqgzog6I1uehaDpKrX2LrVY3WDWpl1H1uNhgnN7rb0BWU+xtB3hpXwqfyvIXHDyt5bdnoQ9Vu6iIwT0WS01Fq+b/DliWyYgPMiolfpYgsdK2TBXQBZ9jW2ZhFRDwJPUgwwJwHECCbsM4h/ILgfPiy2y1zJ4G8X9/S+AmeVC52gaugAAAABJRU5ErkJggg==">
   </a>
   <a (click)="selectBGTexture()"
-     class="c-canvas-menu-link">
+     class="c-toolbar-menu-link">
     <!-- Cloth icon by Icons8 -->
     <img class="icon icons8-Cloth"
          width="40"
@@ -24,7 +23,7 @@
          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAsElEQVRoge2UQQrAIAwE/f8fPPsJ/2ZPPbSY4KGUWTYLhRInhwHX1iqVfzJmX2P2pTTzE1HkHuD9//4onJ+IMocqcb1aUfDXKFumFXt37iGSyVG542X6zE9EkUMWO+L8RJQ5VInr1YqCv0bZMq3Yu3MPkUyOyh0v02d+IoocstgR5yeizKFKXK9WFPw1ypZpxd6de4hkclTueJk+8xNR5JDFjjg/EWUOVeJ6tSqV73IBIrNxG2SqLLgAAAAASUVORK5CYII=">
   </a>
   <a (click)="selectClipart()"
-     class="c-canvas-menu-link">
+     class="c-toolbar-menu-link">
     <!-- Small Icons Filled icon by Icons8 -->
     <img class="icon icons8-Small-Icons-Filled"
          width="40"
@@ -32,7 +31,7 @@
          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAC50lEQVRoge2ZzXHrIBDHKcElpASV4BJSgjuIO7A7eL57d/BFkJt9FmjkDqwOnA7sDpKDQeIJ0AeRhec9McOMh7Cwv2VX4T8QMrcXbVzid0h/Ffv/FETglhBCuMDtAEdKJvDcG8SxRziIgDuXWLYZtYEwCV9Mwpf6/Z5mNOEC7ua4z35ocP0gAu5pRpNjQRcKqDbMcUMIITzHTceJXK0N6nnX1hNx7BECUh4LutBjOpIhOU4IIceCLniOG57jRq/7/BoRcKo2E/tlmtFERWbVzPk2R5jAMxf7JSGEMAk7O/f3S7Nm+oHA4VjQBS/om29/G0g5zgRcajDcmg6acDYIXKp5ZsEaIFxC0QvECG4d8P3SzBInBBP4pxGJwgusFvQ5QohKLYFbLnA7NLWYhF0TQrc0o0lbjVDP0dLKqRw3XEKhN9Dp53Ck9AWg66vVmTLal86vlgeGSbz9lT4FfWuxv3KJVybxlmY0YRLezfFexa6+XpafjzqhoSBW105220PBBFx8fw/dfzQQDTOWI1FBxnRkNJC5vVqLnRpzjXSAlI/rBRy4gDvPcaX+ITbvXcMceaKesUEE3H1XAzWv9dKo12jOa27aZh+iZ6yFmcCzHjOvIvp3MzquQMTQM/aJSPyunJawU9eL0gBZt4BE0zMukMoZXtA3LuDEJRw+JXzouSZMZR9Zz9ggahGVGiee40p3M9q+hWLpGQukOZ5mNGEC1+aYqVt8448+nZ6xQLhE2ryiG46ufcXGI+sZF0j9GTROwhQzfYq1CfNsPdMOIvH2KeHjIWbqvAwAca49pp5pBenTf2M/pp6JCjKm/dxetsVOjblGBoBM8r7R3HOoHnKCxHjfqAMRpod8m07+vlEFMVAPeaOnF5rqfcMcC9FDFkis9w2zPkL0kAMkzvtGbfM7PRT9fcPn2BA95HJk8vcNwzZID/lArnzi9w1Xag7RQz4Qs1Aned9wggzQQz1Awh2Z0v7fA5nbi7Qf2sNpv9Jxz04AAAAASUVORK5CYII=">
   </a>
   <a (click)="onZoom('out')"
-     class="c-canvas-menu-link">
+     class="c-toolbar-menu-link">
     <!-- Zoom Out icon by Icons8 -->
     <img class="icon icons8-Zoom-Out"
          width="40"
@@ -40,11 +39,31 @@
          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAC40lEQVR4nO1azZXiMAxOCZRACXQwlDAdQAdLB9AB3JHGc0HeWzgjZTIdQAfQAXQwe0jggeMAgWBnNv7e8wle5E+WZP04igICAgICArxhsVI9neCYBGJiWGvBn/NFDGsSiP8K/FmsVM/3fmuBTlWXGKdacGsSvmNtiXGqU9X1zaMy4lR1cuJVSVsXMU7jVHV887oLJPBOgvu6yJ+UILgngXff/K7i5qkzLHWCQ83z/rmfL1aqp3nez36D5S1r8MnRijhVHRKI7ScHO53gsIoJx6nq6ASHJLArUYRqlEtYyTMcNOPkmY3GqepoxolmONiUUCeHh0ECMxv5Oq+yzEWKSiCBWV0yHgIJvFtOZvMK84xT1dGCG4sS/ATGzO+NaM9weKVvZi5xaQkkuPcSDwqmX7PZl8HmDs5dQaeqW/R7nDiTzzgpyHeZMZqnTwI7l2aYX7s7XwcQaTO3T3DoTPhxDwkOzdrBieDFSvVM8/MRhPJb4WIfTqrIgv8xLF8utHQvl2kzMY6cC/Vh/qe9mG7g4jAKzQye918utASa5/1LC4D164VW9LuqZa+5rn3bFo/qZXsHoar/r1MBj+znabReAWYC0joXIMbvpgZBLbhxILT11yCOWp0ItT4VjqJiIGxCMUQCO3fCi/X41n05bHajHJbDttZUqxoiUWRriuDeVUvMPH0v3WEfDUofjdirsCQiP8SwflVb3DpW9z0vtM3y6nYHm9l7M/1zWPpyF0rQCY6fHo0lOLZPm+GzRirVcY28eUWSwKDqcJQEBuVjdvj0OhwtJX9rtC0Qk8CAvj7ezPE4fX28ZaTtU+bmm32eDWqe96+MtR9fDAf/Ae8G+SNyE56VjLUrLxKYeX8PcC/5cxzn+49YBAnsNOOkEY+kHiFf+Eb2YmykGZbE+G1Ryib/bdSoZ3J1kP+1COQD+UA+kA/kA/n/HNYHT20hf0TBAtpE/oiTEtpI/ohGFB4BAQEBAQG14x/3Py1s8xLc4wAAAABJRU5ErkJggg==">
   </a>
   <a (click)="onZoom('in')"
-     class="c-canvas-menu-link">
+     class="c-toolbar-menu-link">
     <!-- Zoom In icon by Icons8 -->
     <img class="icon icons8-Zoom-In"
          width="40"
          height="40"
          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADAUlEQVR4nO1ay3XqMBBVCZSQEugglEAH0MGjA+gg7JmJsmH0dmaNxnE6gA6gA+ggb2HIAVl8JITlPOueo5VhpDu6o8+MhEhISEhISIiG+VJ2VY5jYshIw0oxfp820rAihuwvw5/5UnZjjzcIVCFfSOObYtyYhO9oG9L4pgr5EpuHM7JCdg7EXUlbG2l8ywrZic3rLhBDnxh3ocj/OIFxRwz92Pyu4uasa1ioHIdKz3qncT5fyq7Ss175DRa31BCToxVZITvEkNlnDrYqx6GLhLNCdlSOQ2LYXnCEbFRIWMlr2CuNk0cGmhWyozROlIa9zQkhOXiDGKY28iG3sjJEqk4ghmmoPrxADH3LzKyfIc+skB3FuLY4Ic7CWMa9sdpr2D8zNsuQOFcCMe6irAcV6QeW/SXYwqH2UFCFfKnGPU5q61/jpNJ/nSdGc/aJYesqQ5OAy38P2+421gQIZZ7tcxx62PB2gBBCqByHho2Nqw0vzJeyaw7eZxF61AGHXeHMRi23yEr8aVh42XnQAeVYzo/NpHHkY+ehTn3kL0QgB5hh4DkZTqgkM/Ss52MnjAJmvXMFwMrHjlunjnF34TJzd7tm27YehWV7ByHX34d0gM94HkbrHWAeQFoXAqTxq6mLoGJc+9hx7LT12yCOQnQaRgERDkKtPwoLUV0Im3AZIoatqw1vWO7jm/qvw2Y2qsbrsC011aqEiBC2pAju6kqJmbMfJTscI0EZIxF7FZaDyDdpWD0rLW4tq8euF9pqeaHDwSb7aNI/hSUvd+YEleP44dJYjmN7tRk+AlJxxzXy5hZJDAPX4igxDC6X2eEjanH0IvlbpW2GjBgG9Pn+apbH6fP9tSRtrzI3X/aH06DSs96VsrZ/07CPv+DdIH/EQcLTC2Vt50YM0+jvAe4lf4pjfd9HEcSwVRonjXgk5UO+YqN8MTZSGhak8cvilPXh26hRz+RCkP+1SOQT+UQ+kU/kE/n/HNYHT20hf0RFAW0if8SPE9pI/ohGXDwSEhISEhKC4x/fhb08Xp6vDgAAAABJRU5ErkJggg==">
   </a>
+</div>
+
+<!--Tool Type Picker-->
+<div class="c-canvas-tool-picker"
+     (mouseenter)="toggleCursorIcon()"
+     (mouseleave)="toggleCursorIcon()"
+     *ngIf="displayMenu">
+  <img *ngFor="let url of toolPalletes; let i = index;"
+       (click)="selectPallete(i)"
+       [class.is-selected]="palleteIsSelected(i)"
+       class="c-canvas-tool-picker__icon"
+       [src]="url" />
+</div>
+
+<!--Saved Maps Menu-->
+<div class="c-canvas-tool-picker"
+     *ngIf="isSavedMapsMenuVisible">
+  <a *ngFor="let maps of savedMaps(); let i = index;"
+     (mousedown)="openMap(i)"
+     class="c-canvas-menu-link">File: {{i + 1}}</a>
 </div>

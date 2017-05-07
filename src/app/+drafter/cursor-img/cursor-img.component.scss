@@ -1,4 +1,4 @@
-.c-canvas-tool-cursor {
+.c-cursor-img-tool-cursor {
   position: absolute;
   height: 100px;
   width: 100px;
@@ -7,7 +7,7 @@
 
 $tool-picker-dimension: 50px;
 
-.c-canvas-tool-picker {
+.c-cursor-img-tool-picker {
   position: absolute;
   display: flex;
   justify-content: space-around;
@@ -25,7 +25,7 @@ $tool-picker-dimension: 50px;
   overflow-y: scroll;
 }
 
-.c-canvas-tool-picker__icon {
+.c-cursor-img-tool-picker__icon {
   cursor: pointer;
   width: $tool-picker-dimension;
   height: $tool-picker-dimension;

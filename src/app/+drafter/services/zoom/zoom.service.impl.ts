@@ -4,6 +4,7 @@ import { ZoomService } from "./zoom.service";
 
 @Injectable()
 export class ConcreteZoomService implements ZoomService {
+  public zoomLevel: number = 10;
 }
 
 export const zoomServiceProvision = {

@@ -1,2 +1,9 @@
-<drafter-canvas>
+<drafter-toolbar [canvas]="drafterCanvas"
+                 [cursorImg]="cursorImg">
+</drafter-toolbar>
+
+<drafter-canvas #drafterCanvas
+                [cursorImg]="cursorImg">
 </drafter-canvas>
+
+<drafter-cursor-img #cursorImg></drafter-cursor-img>

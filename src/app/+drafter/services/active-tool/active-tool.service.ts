@@ -1,6 +1,6 @@
-import { DrawInterface } from "../../interfaces/draw.interface";
-
-
-export abstract class ActiveToolService implements DrawInterface {
-  abstract draw(ctx, offsetX, offsetY, cellSize, zoomLevel, cw, ch): void;
+export abstract class ActiveToolService {
+  abstract isToolActive: boolean;
+  abstract toggleToolState(): void;
+  abstract activate(): void;
+  abstract deactivate(): void;
 }
