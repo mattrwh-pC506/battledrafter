@@ -1,5 +1,10 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {
+  Location, LocationStrategy,
+  HashLocationStrategy,
+} from "@angular/common";
+
+import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
@@ -17,7 +22,14 @@ import { appRoutingProviders, routing } from "./app.routing";
     HttpModule,
     routing,
   ],
-  providers: [appRoutingProviders],
+  providers: [
+    appRoutingProviders,
+    Location,
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
