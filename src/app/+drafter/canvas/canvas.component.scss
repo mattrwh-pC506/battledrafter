@@ -4,35 +4,3 @@
   width: 100px;
   opacity: .5;
 }
-
-$tool-picker-dimension: 50px;
-
-.c-canvas-tool-picker {
-  position: absolute;
-  display: flex;
-  justify-content: space-around;
-  align-content: flex-start;
-  flex-wrap: wrap;
-  width: 350px;
-  padding: 5px;
-  bottom: 70px;
-  right: 0;
-  margin: 5px;
-  background-color: rgba(255, 255, 255, 0.75);
-  border-radius: 3px;
-  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.25);
-  max-height: 200px;
-  overflow-y: scroll;
-}
-
-.c-canvas-tool-picker__icon {
-  cursor: pointer;
-  width: $tool-picker-dimension;
-  height: $tool-picker-dimension;
-  padding: 5px;
-
-  &.is-selected {
-    box-shadow: 0 0 5px 1px rgba(78, 132, 52, 0.5);
-    border-radius: 5px;
-  }
-}

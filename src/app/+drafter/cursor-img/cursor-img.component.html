@@ -1,11 +1,11 @@
 <!--Transient Cursor Image-->
 <img #cursorImg
      class="c-canvas-tool-cursor"
-     [style.top.px]="iconImageTop + 10"
-     [style.left.px]="iconImageLeft + 10"
+     [style.top.px]="iconImageTop - (cursorImg.height / 2)"
+     [style.left.px]="iconImageLeft - (cursorImg.width / 2)"
      [height]="'100px'"
      [width]="'100px'"
      *ngIf="displayCursorImage"
-     (mousedown)="onMouseDown($event)"
-     (mouseup)="onMouseUp($event)"
+     (window:mousedown)="onMouseDown($event)"
+     (window:mousemove)="onCursorMove($event)"
      [src]="url" />

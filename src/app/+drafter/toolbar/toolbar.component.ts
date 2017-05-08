@@ -63,6 +63,8 @@ export class ToolbarComponent {
       this.clipartService.deactivateTool()
       this.cursorImg.clearCursor();
     } else {
+      this.deactivateOpenMenu();
+      this.bgTextureService.deactivateTool();
       this.clipartService.activateTool();
       let selection = this.clipartService.curSelection;
       this.cursorImg.setCursor(selection);
@@ -74,6 +76,8 @@ export class ToolbarComponent {
       this.bgTextureService.deactivateTool();
       this.cursorImg.clearCursor();
     } else {
+      this.deactivateOpenMenu();
+      this.clipartService.deactivateTool();
       this.bgTextureService.activateTool();
       let selection = this.bgTextureService.curSelection;
       this.cursorImg.setCursor(selection, );
@@ -115,7 +119,13 @@ export class ToolbarComponent {
   }
 
   public toggleSavedMaps(): void {
+    this.clipartService.deactivateTool();
+    this.bgTextureService.deactivateTool();
     this.isSavedMapsMenuVisible = !this.isSavedMapsMenuVisible;
+  }
+
+  public deactivateOpenMenu(): void {
+    this.isSavedMapsMenuVisible = false;
   }
 
   public openMap(index: number) {
@@ -134,5 +144,13 @@ export class ToolbarComponent {
 
   public toggleCursorIcon() {
     this.cursorImg.toggleCursorIcon();
+  }
+
+  public get isBGTextureMenuOpen(): boolean {
+    return this.bgTextureService.toolActive;
+  }
+
+  public get isClipartMenuOpen(): boolean {
+    return this.clipartService.toolActive;
   }
 }

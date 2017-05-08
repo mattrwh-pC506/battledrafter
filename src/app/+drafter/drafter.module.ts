@@ -5,6 +5,7 @@ import { Declaration, Import, Provider } from "lupine-angular/src/app/types/angu
 import { activeToolServiceProvision } from "./services/active-tool/active-tool.service.impl";
 import { backgroundServiceProvision } from './services/background/background.service.impl';
 import { bgTextureServiceProvision } from "./services/bg-textures/bg-textures.service.impl";
+import { clickStateServiceProvision } from './services/click-state/click-state.service.impl';
 import { clipartServiceProvision } from "./services/clipart/clipart.service.impl";
 import { gridServiceProvision } from './services/grid/grid.service.impl';
 import { mapViewCtxServiceProvision } from './services/map-view-ctx/map-view-ctx.service.impl';
@@ -35,6 +36,7 @@ const DRAFTER_PROVIDERS: Provider[] = [
   activeToolServiceProvision,
   backgroundServiceProvision,
   bgTextureServiceProvision,
+  clickStateServiceProvision,
   clipartServiceProvision,
   gridServiceProvision,
   mapViewCtxServiceProvision,

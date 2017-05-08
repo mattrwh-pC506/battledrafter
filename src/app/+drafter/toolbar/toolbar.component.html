@@ -1,5 +1,7 @@
-<div>
+<div (mouseenter)="toggleCursorIcon()"
+     (mouseleave)="toggleCursorIcon()">
   <a (click)="toggleSavedMaps()"
+     [class.is-selected]="isSavedMapsMenuVisible"
      class="c-toolbar-menu-link">
     <!-- Open Folder Filled icon by Icons8 -->
     <img class="icon icons8-Open-Folder-Filled"
@@ -15,6 +17,7 @@
          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAACHUlEQVRoQ+2aS1LCQBCGuxMWuhJPIJ5APYFSBXtdwgoq7NUTGE8AByAFK1h6gFCFnkA8gXoCcKULoK1ATQyYZGYgD0INW+bR3//3THcgCHvywT3hgBWQnm01EeEaAAppAxLR6DCnF2+K9YlILC5Ib9BuIeCtyKSkxsjAeECsMQLkg4IkghfMabVKsf4RF0h/2CnQdN5FhEu2hyiMC9IfWBQaoK6dxgnB9nZgYDZ/98YiAiMMUikZkV0MPbv9iojnXtWr5caFC+MjKg8mFRA/971CBWVHGEymQBzHgmAyBxIEk0kQP5jMgjAYdklkGsSBYZeEAtmmum96/frtqRzZxglP5R4BwJlnrbdKyXArPbdd8kyUduRA145FW+ptYP16rbD1pEEA6Bl0vR5n47iEmHUA8EpUjA1ARJdOdpwCSVZv/m7KEb5GyY5QjiSrN383eUeIvgjQPMxp3bgL49Owk/+ezmsIZALiUaQFkQjuq2WjxdcouhE927pDhGakIEm1KN6gHWd+ZvNxpCBR/hwk4xmvgZQ+IwpERn6fscqRIAFVaqnUWiqgzog6I1uehaDpKrX2LrVY3WDWpl1H1uNhgnN7rb0BWU+xtB3hpXwqfyvIXHDyt5bdnoQ9Vu6iIwT0WS01Fq+b/DliWyYgPMiolfpYgsdK2TBXQBZ9jW2ZhFRDwJPUgwwJwHECCbsM4h/ILgfPiy2y1zJ4G8X9/S+AmeVC52gaugAAAABJRU5ErkJggg==">
   </a>
   <a (click)="selectBGTexture()"
+     [class.is-selected]="isBGTextureMenuOpen"
      class="c-toolbar-menu-link">
     <!-- Cloth icon by Icons8 -->
     <img class="icon icons8-Cloth"
@@ -23,6 +26,7 @@
          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAsElEQVRoge2UQQrAIAwE/f8fPPsJ/2ZPPbSY4KGUWTYLhRInhwHX1iqVfzJmX2P2pTTzE1HkHuD9//4onJ+IMocqcb1aUfDXKFumFXt37iGSyVG542X6zE9EkUMWO+L8RJQ5VInr1YqCv0bZMq3Yu3MPkUyOyh0v02d+IoocstgR5yeizKFKXK9WFPw1ypZpxd6de4hkclTueJk+8xNR5JDFjjg/EWUOVeJ6tSqV73IBIrNxG2SqLLgAAAAASUVORK5CYII=">
   </a>
   <a (click)="selectClipart()"
+     [class.is-selected]="isClipartMenuOpen"
      class="c-toolbar-menu-link">
     <!-- Small Icons Filled icon by Icons8 -->
     <img class="icon icons8-Small-Icons-Filled"
@@ -46,24 +50,22 @@
          height="40"
          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADAUlEQVR4nO1ay3XqMBBVCZSQEugglEAH0MGjA+gg7JmJsmH0dmaNxnE6gA6gA+ggb2HIAVl8JITlPOueo5VhpDu6o8+MhEhISEhISIiG+VJ2VY5jYshIw0oxfp820rAihuwvw5/5UnZjjzcIVCFfSOObYtyYhO9oG9L4pgr5EpuHM7JCdg7EXUlbG2l8ywrZic3rLhBDnxh3ocj/OIFxRwz92Pyu4uasa1ioHIdKz3qncT5fyq7Ss175DRa31BCToxVZITvEkNlnDrYqx6GLhLNCdlSOQ2LYXnCEbFRIWMlr2CuNk0cGmhWyozROlIa9zQkhOXiDGKY28iG3sjJEqk4ghmmoPrxADH3LzKyfIc+skB3FuLY4Ic7CWMa9sdpr2D8zNsuQOFcCMe6irAcV6QeW/SXYwqH2UFCFfKnGPU5q61/jpNJ/nSdGc/aJYesqQ5OAy38P2+421gQIZZ7tcxx62PB2gBBCqByHho2Nqw0vzJeyaw7eZxF61AGHXeHMRi23yEr8aVh42XnQAeVYzo/NpHHkY+ehTn3kL0QgB5hh4DkZTqgkM/Ss52MnjAJmvXMFwMrHjlunjnF34TJzd7tm27YehWV7ByHX34d0gM94HkbrHWAeQFoXAqTxq6mLoGJc+9hx7LT12yCOQnQaRgERDkKtPwoLUV0Im3AZIoatqw1vWO7jm/qvw2Y2qsbrsC011aqEiBC2pAju6kqJmbMfJTscI0EZIxF7FZaDyDdpWD0rLW4tq8euF9pqeaHDwSb7aNI/hSUvd+YEleP44dJYjmN7tRk+AlJxxzXy5hZJDAPX4igxDC6X2eEjanH0IvlbpW2GjBgG9Pn+apbH6fP9tSRtrzI3X/aH06DSs96VsrZ/07CPv+DdIH/EQcLTC2Vt50YM0+jvAe4lf4pjfd9HEcSwVRonjXgk5UO+YqN8MTZSGhak8cvilPXh26hRz+RCkP+1SOQT+UQ+kU/kE/n/HNYHT20hf0RFAW0if8SPE9pI/ohGXDwSEhISEhKC4x/fhb08Xp6vDgAAAABJRU5ErkJggg==">
   </a>
-</div>
 
-<!--Tool Type Picker-->
-<div class="c-canvas-tool-picker"
-     (mouseenter)="toggleCursorIcon()"
-     (mouseleave)="toggleCursorIcon()"
-     *ngIf="displayMenu">
-  <img *ngFor="let url of toolPalletes; let i = index;"
-       (click)="selectPallete(i)"
-       [class.is-selected]="palleteIsSelected(i)"
-       class="c-canvas-tool-picker__icon"
-       [src]="url" />
-</div>
+  <!--Tool Type Picker-->
+  <div class="c-toolbar-tool-picker"
+       *ngIf="displayMenu">
+    <img *ngFor="let url of toolPalletes; let i = index;"
+         (click)="selectPallete(i)"
+         [class.is-selected]="palleteIsSelected(i)"
+         class="c-toolbar-tool-picker__icon"
+         [src]="url" />
+  </div>
 
-<!--Saved Maps Menu-->
-<div class="c-canvas-tool-picker"
-     *ngIf="isSavedMapsMenuVisible">
-  <a *ngFor="let maps of savedMaps(); let i = index;"
-     (mousedown)="openMap(i)"
-     class="c-canvas-menu-link">File: {{i + 1}}</a>
+  <!--Saved Maps Menu-->
+  <div class="c-toolbar-tool-picker"
+       *ngIf="isSavedMapsMenuVisible">
+    <a *ngFor="let maps of savedMaps(); let i = index;"
+       (mousedown)="openMap(i)"
+       class="c-toolbar-menu-link">File: {{i + 1}}</a>
+  </div>
 </div>

@@ -5,6 +5,7 @@ import {
 } from "@angular/core";
 
 import { ActiveToolService } from "../services/active-tool/active-tool.service";
+import { ClickStateService } from "../services/click-state/click-state.service";
 import { ClipartService } from "../services/clipart/clipart.service";
 import { GridService } from "../services/grid/grid.service";
 import { MapViewCtxService } from "../services/map-view-ctx/map-view-ctx.service";
@@ -27,10 +28,10 @@ export class CanvasComponent {
   @Input("cursorImg") private cursorImg: CursorImgComponent;
 
   private resizeTimeout: any;
-  private mouseClickState: string = "up";
 
   constructor(
     private activeToolService: ActiveToolService,
+    private clickStateService: ClickStateService,
     private clipartService: ClipartService,
     private gridService: GridService,
     private mapViewCtxService: MapViewCtxService,
@@ -84,37 +85,11 @@ export class CanvasComponent {
   }
 
   public onMouseDown(e) {
-    this.mouseClickState = "down";
-    if (this.activeToolService.isToolActive) {
-      let realX = e.clientX + 10 + (this.mapViewCtxService.offsetX * -1);
-      let realY = e.clientY + 10 + (this.mapViewCtxService.offsetY * -1);
-      if (realX % 2 !== 0) {
-        realX += 1;
-      }
-      if (realY % 2 !== 0) {
-        realY += 1;
-      }
-      this.clipartService.placeClipart({
-        src: this.cursorImg.el.src,
-        realHeight: this.cursorImg.el.height / this.zoomService.zoomLevel,
-        realWidth: this.cursorImg.el.width / this.zoomService.zoomLevel,
-        realX: realX,
-        realY: realY,
-        realZoom: this.zoomService.zoomLevel,
-      });
-      this.clipartService.drawAll(
-        this.ctx,
-        this.mapViewCtxService.offsetX,
-        this.mapViewCtxService.offsetY,
-        this.zoomService.zoomLevel,
-      );
-      this.rendererService.render(this.ctx, this.canvas);
-
-    }
+    this.clickStateService.mouseClickState = "down";
   }
 
   public onMouseUp(e) {
-    this.mouseClickState = "up";
+    this.clickStateService.mouseClickState = "up";
     this.gridService.draw(this.ctx);
 
   }
@@ -125,22 +100,12 @@ export class CanvasComponent {
     if (this.evNum % 5 !== 0) {
       return;
     }
-    if (this.mouseClickState === "up") {
+    if (this.clickStateService.mouseClickState === "up") {
       return;
-    } else if (this.mouseClickState === "down") {
+    } else if (this.clickStateService.mouseClickState === "down") {
       this.mapViewCtxService.offsetX += e.movementX * 5;
       this.mapViewCtxService.offsetY += e.movementY * 5;
       this.rendererService.render(this.ctx, this.canvas);
-    }
-  }
-
-  public onCursorMove(e) {
-    if (this.mouseClickState !== "up") {
-      return;
-    } else if (this.activeToolService.isToolActive &&
-      e.clientY > 125 &&
-      !!this.cursorImg.isCursorImageInitialized) {
-      this.cursorImg.followCursor(e);
     }
   }
 }
