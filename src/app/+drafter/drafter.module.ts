@@ -13,6 +13,8 @@ import { rendererServiceProvision } from './services/renderer/renderer.service.i
 import { resetServiceProvision } from './services/reset/reset.service.impl';
 import { zoomServiceProvision } from './services/zoom/zoom.service.impl';
 
+import { provideBaseUploadService } from "../shared/services/upload-file.service.impl";
+
 import { DrafterComponent } from "./drafter.component";
 import { CanvasComponent } from "./canvas/canvas.component";
 import { CursorImgComponent } from "./cursor-img/cursor-img.component";
@@ -43,6 +45,7 @@ const DRAFTER_PROVIDERS: Provider[] = [
   rendererServiceProvision,
   resetServiceProvision,
   zoomServiceProvision,
+  provideBaseUploadService,
 ];
 
 @NgModule({

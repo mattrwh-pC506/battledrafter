@@ -54,11 +54,18 @@
   <!--Tool Type Picker-->
   <div class="c-toolbar-tool-picker"
        *ngIf="displayMenu">
-    <img *ngFor="let url of toolPalletes; let i = index;"
-         (click)="selectPallete(i)"
-         [class.is-selected]="palleteIsSelected(i)"
-         class="c-toolbar-tool-picker__icon"
-         [src]="url" />
+    <div *ngIf="false">
+      <input type="file"
+             (change)="uploadFile($event)" />
+    </div>
+    <div class="c-app-rule"></div>
+    <div>
+      <img *ngFor="let url of toolPalletes; let i = index;"
+           (click)="selectPallete(i)"
+           [class.is-selected]="palleteIsSelected(i)"
+           class="c-toolbar-tool-picker__icon"
+           [src]="url" />
+    </div>
   </div>
 
   <!--Saved Maps Menu-->

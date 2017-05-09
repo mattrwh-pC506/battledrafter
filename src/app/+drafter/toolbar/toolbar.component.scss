@@ -39,12 +39,7 @@ $button-dimension: 50px;
 
 .c-toolbar-menu-link {
   cursor: pointer;
-  margin: 0 10px 0 0;
   text-decoration: None;
-
-  &:hover {
-    color: steelblue;
-  }
 
   &.is-selected {
     img {

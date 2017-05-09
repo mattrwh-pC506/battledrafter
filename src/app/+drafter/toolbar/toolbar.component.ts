@@ -1,3 +1,5 @@
+import { environment as env } from "../../../environments/environment";
+
 import {
   Component, ViewEncapsulation, Input
 } from "@angular/core";
@@ -12,6 +14,8 @@ import { ZoomService } from "../services/zoom/zoom.service";
 
 import { CanvasComponent } from "../canvas/canvas.component";
 import { CursorImgComponent } from "../cursor-img/cursor-img.component";
+
+import { UploadService } from "../../shared/services/upload-file.service";
 
 
 @Component({
@@ -36,6 +40,7 @@ export class ToolbarComponent {
     private gridService: GridService,
     private mapViewCtxService: MapViewCtxService,
     private rendererService: RendererService,
+    private uploadService: UploadService,
     private zoomService: ZoomService,
   ) { }
 
@@ -152,5 +157,20 @@ export class ToolbarComponent {
 
   public get isClipartMenuOpen(): boolean {
     return this.clipartService.toolActive;
+  }
+
+  public uploadFile(e) {
+    let inputEl = e.target;
+    let path: string = `${env.BASE_API}/art`;
+    let file: File = inputEl.files[0];
+    let data: any = { label: file.name };
+
+    if (this.clipartService.toolActive) {
+      data.type = "clipart";
+    } else if (this.bgTextureService.toolActive) {
+      data.type = "texture";
+    }
+
+    this.uploadService.makeFileRequest(path, file, data);
   }
 }
