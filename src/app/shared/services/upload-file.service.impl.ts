@@ -17,8 +17,10 @@ export class BaseUploadService implements UploadService {
       formData.append('file', file, file.name);
       formData.append('data', JSON.stringify(data));
       xhr.onreadystatechange = () => {
+        console.log("readyState", xhr.readyState, xhr.status)
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
+            console.log("resolving")
             resolve(xhr.response);
           } else {
             reject(xhr.response);

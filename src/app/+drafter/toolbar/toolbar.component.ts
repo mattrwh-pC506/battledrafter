@@ -171,6 +171,8 @@ export class ToolbarComponent {
       data.type = "texture";
     }
 
-    this.uploadService.makeFileRequest(path, file, data);
+    this.uploadService.makeFileRequest(path, file, data)
+      .then(() => console.log("file uploaded"))
+      .catch(() => console.log("file not uploaded"));
   }
 }
