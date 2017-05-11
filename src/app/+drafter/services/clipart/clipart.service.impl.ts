@@ -1,56 +1,27 @@
+import { environment as env } from "../../../../environments/environment";
+
 import { Injectable } from "@angular/core";
+import { Http } from "@angular/http";
+import "rxjs/add/operator/map";
 import { Provider } from "lupine-angular/src/app/types/angular.type";
 import { ClipartService } from "./clipart.service";
+
+import { ArtService } from "../../../shared/services/art.service";
 
 
 @Injectable()
 export class ConcreteClipartService implements ClipartService {
 
-  public clipart: string[] = [
-    "assets/images/clipart/tree-02.png",
-    "assets/images/clipart/tree-03.png",
-    "assets/images/clipart/tree-05.png",
-    "assets/images/clipart/tree-06.png",
-    "assets/images/clipart/tree-07.png",
-    "assets/images/clipart/tree-02.png",
-    "assets/images/clipart/tree-03.png",
-    "assets/images/clipart/tree-05.png",
-    "assets/images/clipart/tree-06.png",
-    "assets/images/clipart/tree-07.png",
-    "assets/images/clipart/tree-02.png",
-    "assets/images/clipart/tree-03.png",
-    "assets/images/clipart/tree-05.png",
-    "assets/images/clipart/tree-06.png",
-    "assets/images/clipart/tree-07.png",
-    "assets/images/clipart/tree-02.png",
-    "assets/images/clipart/tree-03.png",
-    "assets/images/clipart/tree-05.png",
-    "assets/images/clipart/tree-06.png",
-    "assets/images/clipart/tree-07.png",
-    "assets/images/clipart/tree-02.png",
-    "assets/images/clipart/tree-03.png",
-    "assets/images/clipart/tree-05.png",
-    "assets/images/clipart/tree-06.png",
-    "assets/images/clipart/tree-07.png",
-    "assets/images/clipart/tree-02.png",
-    "assets/images/clipart/tree-03.png",
-    "assets/images/clipart/tree-05.png",
-    "assets/images/clipart/tree-06.png",
-    "assets/images/clipart/tree-07.png",
-    "assets/images/clipart/tree-02.png",
-    "assets/images/clipart/tree-03.png",
-    "assets/images/clipart/tree-05.png",
-    "assets/images/clipart/tree-06.png",
-    "assets/images/clipart/tree-07.png",
-    "assets/images/clipart/tree-02.png",
-    "assets/images/clipart/tree-03.png",
-    "assets/images/clipart/tree-05.png",
-    "assets/images/clipart/tree-06.png",
-    "assets/images/clipart/tree-07.png",
-  ];
+  public clipart: string[] = [];
   public selectedIndex: number = 0;
   private _store: any[] = [];
   private cursorIcon: string = "";
+
+  public constructor(
+    private artService: ArtService,
+  ) {
+    this.getAllArt();
+  }
 
   public get toolActive(): boolean {
     return this.cursorIcon !== "";
@@ -115,16 +86,18 @@ export class ConcreteClipartService implements ClipartService {
 
   public open(index: number): void {
     let maps: any = [];
-    console.log(this.savedMaps());
     if (this.savedMaps()) {
       maps = JSON.parse(this.savedMaps());
-      console.log(maps, index, maps[index]);
       this._store = maps[index];
     }
   }
 
   public savedMaps(): string {
     return localStorage.getItem("vp-battlemaps");
+  }
+
+  public getAllArt() {
+    this.artService.getArt("clipart").subscribe(clipart => this.clipart = clipart);
   }
 }
 

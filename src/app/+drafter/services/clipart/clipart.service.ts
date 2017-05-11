@@ -13,6 +13,7 @@ export abstract class ClipartService implements DrawInterface {
   abstract activateTool(): void;
   abstract deactivateTool(): void;
   abstract onZoom(curZoom: number, oldZoom: number): void;
+  abstract getAllArt(): void;
   abstract save(): void;
   abstract open(index: number): void;
   abstract savedMaps(): string;

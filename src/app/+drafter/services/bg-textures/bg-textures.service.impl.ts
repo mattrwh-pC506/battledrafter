@@ -1,18 +1,20 @@
 import { Injectable } from "@angular/core";
 import { BGTextureService } from "./bg-textures.service";
 
+import { ArtService } from "../../../shared/services/art.service";
+
 
 @Injectable()
 export class ConcreteBGTextureService implements BGTextureService {
   private cursorIcon: string = "";
-
-  public textures: string[] = [
-    "assets/images/bg-textures/grass-powder-1.png",
-    "assets/images/bg-textures/grass-powder-2.png",
-    "assets/images/bg-textures/dead-grass-powder-1.png",
-  ];
-
+  public textures: string[] = [];
   public selectedIndex: number = 0;
+
+  constructor(
+    private artService: ArtService
+  ) {
+    this.getAllArt();
+  }
 
   public get toolActive(): boolean {
     return this.cursorIcon !== "";
@@ -32,6 +34,10 @@ export class ConcreteBGTextureService implements BGTextureService {
 
   public get curSelection(): string {
     return this.textures[this.selectedIndex];
+  }
+
+  public getAllArt() {
+    this.artService.getArt("texture").subscribe(textures => this.textures = textures);
   }
 }
 

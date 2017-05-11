@@ -173,6 +173,10 @@ export class ToolbarComponent {
 
     this.uploadService.makeFileRequest(path, file, data)
       .then(() => console.log("file uploaded"))
+      .then(() => {
+        this.clipartService.getAllArt();
+        this.bgTextureService.getAllArt();
+      })
       .catch(() => console.log("file not uploaded"));
   }
 }

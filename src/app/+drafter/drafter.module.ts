@@ -13,6 +13,7 @@ import { rendererServiceProvision } from './services/renderer/renderer.service.i
 import { resetServiceProvision } from './services/reset/reset.service.impl';
 import { zoomServiceProvision } from './services/zoom/zoom.service.impl';
 
+import { provideBaseArtService } from "../shared/services/art.service.impl";
 import { provideBaseUploadService } from "../shared/services/upload-file.service.impl";
 
 import { DrafterComponent } from "./drafter.component";
@@ -45,6 +46,7 @@ const DRAFTER_PROVIDERS: Provider[] = [
   rendererServiceProvision,
   resetServiceProvision,
   zoomServiceProvision,
+  provideBaseArtService,
   provideBaseUploadService,
 ];
 
