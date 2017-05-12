@@ -11,6 +11,7 @@ import { gridServiceProvision } from './services/grid/grid.service.impl';
 import { mapViewCtxServiceProvision } from './services/map-view-ctx/map-view-ctx.service.impl';
 import { rendererServiceProvision } from './services/renderer/renderer.service.impl';
 import { resetServiceProvision } from './services/reset/reset.service.impl';
+import { saveServiceProvision } from "./services/save/save.service.impl";
 import { zoomServiceProvision } from './services/zoom/zoom.service.impl';
 
 import { provideBaseArtService } from "../shared/services/art.service.impl";
@@ -45,6 +46,7 @@ const DRAFTER_PROVIDERS: Provider[] = [
   mapViewCtxServiceProvision,
   rendererServiceProvision,
   resetServiceProvision,
+  saveServiceProvision,
   zoomServiceProvision,
   provideBaseArtService,
   provideBaseUploadService,

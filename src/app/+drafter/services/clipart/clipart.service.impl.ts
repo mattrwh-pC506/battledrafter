@@ -75,29 +75,16 @@ export class ConcreteClipartService implements ClipartService {
     });
   }
 
-  public save(): void {
-    let existingMaps: any[] = [];
-    if (this.savedMaps()) {
-      existingMaps = JSON.parse(this.savedMaps());
-    }
-    existingMaps.push(this._store);
-    localStorage.setItem("vp-battlemaps", JSON.stringify(existingMaps));
-  }
-
-  public open(index: number): void {
-    let maps: any = [];
-    if (this.savedMaps()) {
-      maps = JSON.parse(this.savedMaps());
-      this._store = maps[index];
-    }
-  }
-
-  public savedMaps(): string {
-    return localStorage.getItem("vp-battlemaps");
-  }
-
   public getAllArt() {
     this.artService.getArt("clipart").subscribe(clipart => this.clipart = clipart);
+  }
+
+  public getStore() {
+    return this._store;
+  }
+
+  public setStore(store: any) {
+    this._store = store;
   }
 }
 

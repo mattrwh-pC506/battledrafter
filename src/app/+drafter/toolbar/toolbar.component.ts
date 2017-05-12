@@ -10,6 +10,7 @@ import { ClipartService } from "../services/clipart/clipart.service";
 import { GridService } from "../services/grid/grid.service";
 import { MapViewCtxService } from "../services/map-view-ctx/map-view-ctx.service";
 import { RendererService } from "../services/renderer/renderer.service";
+import { SaveService } from "../services/save/save.service";
 import { ZoomService } from "../services/zoom/zoom.service";
 
 import { CanvasComponent } from "../canvas/canvas.component";
@@ -40,6 +41,7 @@ export class ToolbarComponent {
     private gridService: GridService,
     private mapViewCtxService: MapViewCtxService,
     private rendererService: RendererService,
+    private saveService: SaveService,
     private uploadService: UploadService,
     private zoomService: ZoomService,
   ) { }
@@ -120,7 +122,7 @@ export class ToolbarComponent {
   }
 
   public saveMap(): void {
-    this.clipartService.save();
+    this.saveService.save();
   }
 
   public toggleSavedMaps(): void {
@@ -134,13 +136,13 @@ export class ToolbarComponent {
   }
 
   public openMap(index: number) {
-    this.clipartService.open(index);
+    this.saveService.open(index);
     this.rendererService.render(this.canvasComponent.ctx, this.canvasComponent.canvas);
   }
 
   public savedMaps(): any[] {
-    if (this.clipartService.savedMaps()) {
-      let maps = JSON.parse(this.clipartService.savedMaps());
+    if (this.saveService.savedMaps()) {
+      let maps = JSON.parse(this.saveService.savedMaps());
       return maps;
     } else {
       return [];
