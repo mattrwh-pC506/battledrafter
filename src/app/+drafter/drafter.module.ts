@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { NgRedux } from "@angular-redux/store";
 import { Declaration, Import, Provider } from "lupine-angular/src/app/types/angular.type";
 
 import { activeToolServiceProvision } from "./services/active-tool/active-tool.service.impl";
@@ -16,6 +17,11 @@ import { zoomServiceProvision } from './services/zoom/zoom.service.impl';
 
 import { provideBaseArtService } from "../shared/services/art.service.impl";
 import { provideBaseUploadService } from "../shared/services/upload-file.service.impl";
+
+import { Paper } from "./store/paper/paper.types";
+import { PaperActionCreators } from "./store/paper/paper.actions";
+import { paperActionsReducer } from "./store/paper/paper.reducer";
+import { mergeReducers, AppStateStore } from "../shared/store";
 
 import { DrafterComponent } from "./drafter.component";
 import { CanvasComponent } from "./canvas/canvas.component";
@@ -37,6 +43,7 @@ const DRAFTER_IMPORTS: Import[] = [
 ];
 
 const DRAFTER_PROVIDERS: Provider[] = [
+  PaperActionCreators,
   activeToolServiceProvision,
   backgroundServiceProvision,
   bgTextureServiceProvision,
@@ -52,12 +59,25 @@ const DRAFTER_PROVIDERS: Provider[] = [
   provideBaseUploadService,
 ];
 
+export interface AppStateStore {
+  paper?: Paper;
+}
+
 @NgModule({
   declarations: DRAFTER_DECLARATIONS,
   imports: DRAFTER_IMPORTS,
   providers: DRAFTER_PROVIDERS,
   exports: DRAFTER_DECLARATIONS,
 })
-export class DrafterModule { }
+export class DrafterModule {
+  constructor(private ngRedux: NgRedux<AppStateStore>) {
+    mergeReducers(
+      ngRedux,
+      {
+        paper: paperActionsReducer,
+      }
+    );
+  }
+}
 
 

@@ -1,4 +1,5 @@
 import { DrawInterface } from "../../interfaces/draw.interface";
+import { Paper } from "../../store/paper/paper.types";
 
 
 export abstract class ClipartService implements DrawInterface {
@@ -14,6 +15,6 @@ export abstract class ClipartService implements DrawInterface {
   abstract deactivateTool(): void;
   abstract onZoom(curZoom: number, oldZoom: number): void;
   abstract getAllArt(): void;
-  abstract getStore(): any[];
-  abstract setStore(store: any): void;
+  abstract getPaper(): Paper;
+  abstract setPaper(paper: Paper): void;
 }

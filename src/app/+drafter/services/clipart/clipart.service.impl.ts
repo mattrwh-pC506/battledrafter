@@ -2,25 +2,32 @@ import { environment as env } from "../../../../environments/environment";
 
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
+import { select } from "@angular-redux/store";
+import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import { Provider } from "lupine-angular/src/app/types/angular.type";
 import { ClipartService } from "./clipart.service";
 
 import { ArtService } from "../../../shared/services/art.service";
+import { PaperActionCreators } from "../../store/paper/paper.actions";
+import { Paper } from "../../store/paper/paper.types";
 
 
 @Injectable()
 export class ConcreteClipartService implements ClipartService {
+  @select("paper") public paper: Observable<Paper>;
 
   public clipart: string[] = [];
   public selectedIndex: number = 0;
-  private _store: any[] = [];
+  private _paper: Paper = { drawnItems: [] };
   private cursorIcon: string = "";
 
   public constructor(
     private artService: ArtService,
+    private paperActionCreators: PaperActionCreators,
   ) {
     this.getAllArt();
+    this.paper.subscribe((state: Paper) => this._paper = state);
   }
 
   public get toolActive(): boolean {
@@ -44,8 +51,8 @@ export class ConcreteClipartService implements ClipartService {
   }
 
   public drawAll(ctx, offsetX, offsetY, zoomLevel): any {
-    for (let i = 0; i < this._store.length; i++) {
-      let clip = this._store[i];
+    for (let i = 0; i < this._paper.drawnItems.length; i++) {
+      let clip = this._paper.drawnItems[i];
       this.draw(clip, ctx, offsetX, offsetY, zoomLevel);
     };
   }
@@ -63,12 +70,12 @@ export class ConcreteClipartService implements ClipartService {
   }
 
   public placeClipart(clip: any): void {
-    this._store.push(clip);
+    this.paperActionCreators.drawArtToPaper(clip);
   }
 
   public onZoom(curZoom: number, oldZoom) {
     let zoomPercentage = curZoom / oldZoom;
-    this._store.forEach((item) => {
+    this._paper.drawnItems.forEach((item) => {
       item.realX *= zoomPercentage;
       item.realY *= zoomPercentage;
       item.zoomLevel = curZoom;
@@ -79,12 +86,12 @@ export class ConcreteClipartService implements ClipartService {
     this.artService.getArt("clipart").subscribe(clipart => this.clipart = clipart);
   }
 
-  public getStore() {
-    return this._store;
+  public getPaper() {
+    return this._paper;
   }
 
-  public setStore(store: any) {
-    this._store = store;
+  public setPaper(paper: any) {
+    this.paperActionCreators.drawExistingDraftToPaper(paper);
   }
 }
 

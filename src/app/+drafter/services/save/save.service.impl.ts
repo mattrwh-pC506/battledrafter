@@ -17,7 +17,7 @@ export class ConcreteSaveService implements SaveService {
     if (this.savedMaps()) {
       existingMaps = JSON.parse(this.savedMaps());
     }
-    existingMaps.push(this.clipartService.getStore());
+    existingMaps.push(this.clipartService.getPaper());
     localStorage.setItem("vp-battlemaps", JSON.stringify(existingMaps));
   }
 
@@ -25,7 +25,7 @@ export class ConcreteSaveService implements SaveService {
     let maps: any = [];
     if (this.savedMaps()) {
       maps = JSON.parse(this.savedMaps());
-      this.clipartService.setStore(maps[index]);
+      this.clipartService.setPaper(maps[index]);
     }
   }
 
