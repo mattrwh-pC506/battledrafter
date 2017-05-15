@@ -1,0 +1,22 @@
+<a (click)="togglePalette()"
+   [class.is-selected]="toolActive">
+  <img width="40"
+       height="40"
+       [src]="paletteIcon">
+</a>
+
+<div class="c-palette-tool-picker"
+     *ngIf="toolActive">
+  <div>
+    <input type="file"
+           (change)="uploadFile($event)" />
+  </div>
+  <div class="c-app-rule"></div>
+  <div>
+    <img *ngFor="let url of swatches; let i = index;"
+         (click)="selectSwatch(i)"
+         [class.is-selected]="swatchIsSelected(i)"
+         class="c-palette-tool-picker__icon"
+         [src]="url" />
+  </div>
+</div>

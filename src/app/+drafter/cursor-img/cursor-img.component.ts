@@ -3,14 +3,18 @@ import {
   ElementRef, ViewEncapsulation,
 } from "@angular/core";
 
+import { Observable } from "rxjs/Observable";
+import { select } from "@angular-redux/store";
+
 import { ActiveToolService } from "../services/active-tool/active-tool.service";
 import { ClickStateService } from "../services/click-state/click-state.service";
-import { ClipartService } from "../services/clipart/clipart.service";
 import { MapViewCtxService } from "../services/map-view-ctx/map-view-ctx.service";
 import { RendererService } from "../services/renderer/renderer.service";
 import { ZoomService } from "../services/zoom/zoom.service";
 
 import { CanvasComponent } from "../canvas/canvas.component";
+import { PaperActionCreators } from "../store/paper/paper.actions";
+import { Palette } from "../store/palette/palette.types";
 
 
 @Component({
@@ -22,19 +26,29 @@ import { CanvasComponent } from "../canvas/canvas.component";
 export class CursorImgComponent {
   @ViewChild("cursorImg", { read: ElementRef }) private _el: ElementRef;
   @Input("canvas") private canvasComponent: CanvasComponent;
+  @select("palette") public palette: Observable<Palette>;
   private iconImageTop: number = -1000;
   private iconImageLeft: number = -1000;
   public url: string = "";
   public displayCursorIfPossible: boolean = true;
+  public isToolActive: boolean = false;
+  public drawing: boolean = false;
 
   constructor(
-    private activeToolService: ActiveToolService,
     private clickStateService: ClickStateService,
-    private clipartService: ClipartService,
+    private paperActionCreators: PaperActionCreators,
     private mapViewCtxService: MapViewCtxService,
     private rendererService: RendererService,
     private zoomService: ZoomService,
   ) { }
+
+  public ngAfterViewInit() {
+    this.palette.subscribe((state: Palette) => {
+      this.url = state.selectedSwatchUrl;
+      this.isToolActive = Object.keys(state.types).some((paletteType) => state.types[paletteType].active);
+      this.displayCursorIfPossible = state.bindSwatchToCursor;
+    });
+  }
 
   public get isCursorImageInitialized(): boolean {
     return !!this._el;
@@ -52,31 +66,8 @@ export class CursorImgComponent {
   }
 
   public get displayCursorImage() {
-    return this.activeToolService.isToolActive &&
+    return this.isToolActive &&
       this.displayCursorIfPossible;
-  }
-
-  public toggleCursorIcon() {
-    this.displayCursorIfPossible = !this.displayCursorIfPossible;
-  }
-
-  public clearCursor(): void {
-    this.activeToolService.deactivate();
-    this.url = "";
-  }
-
-  public setCursor(url: string) {
-    this.activeToolService.activate();
-    this.url = url;
-  }
-
-  public onCursorMove(e) {
-    if (this.clickStateService.mouseClickState !== "up") {
-      return;
-    } else if (this.activeToolService.isToolActive &&
-      !!this.isCursorImageInitialized) {
-      this.followCursor(e);
-    }
   }
 
   public centeredCoord(coord: number, dimension: number) {
@@ -84,7 +75,8 @@ export class CursorImgComponent {
   }
 
   public onMouseDown(e) {
-    if (this.activeToolService.isToolActive) {
+    this.drawing = true;
+    if (this.isToolActive) {
       let realX = e.clientX - (this.el.width / 2) + (this.mapViewCtxService.offsetX * -1);
       let realY = e.clientY - (this.el.height / 2) + (this.mapViewCtxService.offsetY * -1);
       if (realX % 2 !== 0) {
@@ -93,7 +85,7 @@ export class CursorImgComponent {
       if (realY % 2 !== 0) {
         realY += 1;
       }
-      this.clipartService.placeClipart({
+      this.paperActionCreators.drawArtToPaper({
         src: this.el.src,
         realHeight: this.el.height / this.zoomService.zoomLevel,
         realWidth: this.el.width / this.zoomService.zoomLevel,
@@ -101,14 +93,21 @@ export class CursorImgComponent {
         realY: realY,
         realZoom: this.zoomService.zoomLevel,
       });
-      this.clipartService.drawAll(
-        this.canvasComponent.ctx,
-        this.mapViewCtxService.offsetX,
-        this.mapViewCtxService.offsetY,
-        this.zoomService.zoomLevel,
-      );
       this.rendererService.render(this.canvasComponent.ctx, this.canvasComponent.canvas);
+    }
+  }
 
+  public onMouseUp() {
+    this.drawing = false;
+  }
+
+  public onMouseMove(e) {
+    if (this.isToolActive &&
+      !!this.isCursorImageInitialized) {
+      this.followCursor(e);
+    }
+    if (!!this.drawing) {
+      this.onMouseDown(e);
     }
   }
 

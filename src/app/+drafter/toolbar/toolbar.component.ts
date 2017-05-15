@@ -1,12 +1,7 @@
-import { environment as env } from "../../../environments/environment";
-
 import {
   Component, ViewEncapsulation, Input
 } from "@angular/core";
 
-import { ActiveToolService } from "../services/active-tool/active-tool.service";
-import { BGTextureService } from "../services/bg-textures/bg-textures.service";
-import { ClipartService } from "../services/clipart/clipart.service";
 import { GridService } from "../services/grid/grid.service";
 import { MapViewCtxService } from "../services/map-view-ctx/map-view-ctx.service";
 import { RendererService } from "../services/renderer/renderer.service";
@@ -14,9 +9,8 @@ import { SaveService } from "../services/save/save.service";
 import { ZoomService } from "../services/zoom/zoom.service";
 
 import { CanvasComponent } from "../canvas/canvas.component";
-import { CursorImgComponent } from "../cursor-img/cursor-img.component";
 
-import { UploadService } from "../../shared/services/upload-file.service";
+import { PaletteActionCreators } from "../store/palette/palette.actions";
 
 
 @Component({
@@ -30,19 +24,15 @@ import { UploadService } from "../../shared/services/upload-file.service";
 })
 export class ToolbarComponent {
   @Input("canvas") private canvasComponent: CanvasComponent;
-  @Input("cursorImg") private cursorImg: CursorImgComponent;
 
   public isSavedMapsMenuVisible: boolean = false;
 
   constructor(
-    private activeToolService: ActiveToolService,
-    private clipartService: ClipartService,
-    private bgTextureService: BGTextureService,
     private gridService: GridService,
     private mapViewCtxService: MapViewCtxService,
+    private paletteActionCreators: PaletteActionCreators,
     private rendererService: RendererService,
     private saveService: SaveService,
-    private uploadService: UploadService,
     private zoomService: ZoomService,
   ) { }
 
@@ -57,7 +47,7 @@ export class ToolbarComponent {
       return;
     }
 
-    this.clipartService.onZoom(this.zoomService.zoomLevel, oldZoom);
+    this.zoomService.onZoom(oldZoom);
     this.mapViewCtxService.offsetX = Math.floor(
       Math.floor(this.mapViewCtxService.width / this.gridService.cellSize) / 2);
     this.mapViewCtxService.offsetY = Math.floor(
@@ -65,69 +55,12 @@ export class ToolbarComponent {
     this.rendererService.render(this.canvasComponent.ctx, this.canvasComponent.canvas);
   }
 
-  public selectClipart(): void {
-    if (this.clipartService.toolActive) {
-      this.clipartService.deactivateTool()
-      this.cursorImg.clearCursor();
-    } else {
-      this.deactivateOpenMenu();
-      this.bgTextureService.deactivateTool();
-      this.clipartService.activateTool();
-      let selection = this.clipartService.curSelection;
-      this.cursorImg.setCursor(selection);
-    }
-  }
-
-  public selectBGTexture(): void {
-    if (this.bgTextureService.toolActive) {
-      this.bgTextureService.deactivateTool();
-      this.cursorImg.clearCursor();
-    } else {
-      this.deactivateOpenMenu();
-      this.clipartService.deactivateTool();
-      this.bgTextureService.activateTool();
-      let selection = this.bgTextureService.curSelection;
-      this.cursorImg.setCursor(selection, );
-    }
-  }
-
-  public get toolPalletes(): string[] {
-    if (this.clipartService.toolActive) {
-      return this.clipartService.clipart;
-    } else if (this.bgTextureService.toolActive) {
-      return this.bgTextureService.textures;
-    }
-  }
-
-  public palleteIsSelected(index: number) {
-    if (this.clipartService.toolActive) {
-      return this.clipartService.selectedIndex === index;
-    } else if (this.bgTextureService.toolActive) {
-      return this.bgTextureService.selectedIndex === index;
-    }
-  }
-
-  public selectPallete(index: number): void {
-    if (this.clipartService.toolActive) {
-      this.clipartService.select(index);
-      this.cursorImg.url = this.clipartService.curSelection;
-    } else if (this.bgTextureService.toolActive) {
-      this.bgTextureService.select(index);
-      this.cursorImg.url = this.bgTextureService.curSelection;
-    }
-  }
-
-  public get displayMenu(): boolean {
-    return this.activeToolService.isToolActive;
-  }
-
   public saveMap(): void {
     this.saveService.save();
   }
 
   public toggleSavedMaps(): void {
-    this.clipartService.deactivateTool();
-    this.bgTextureService.deactivateTool();
+    this.paletteActionCreators.deactivateAllPalettes();
     this.isSavedMapsMenuVisible = !this.isSavedMapsMenuVisible;
   }
 
@@ -150,35 +83,6 @@ export class ToolbarComponent {
   }
 
   public toggleCursorIcon() {
-    this.cursorImg.toggleCursorIcon();
-  }
-
-  public get isBGTextureMenuOpen(): boolean {
-    return this.bgTextureService.toolActive;
-  }
-
-  public get isClipartMenuOpen(): boolean {
-    return this.clipartService.toolActive;
-  }
-
-  public uploadFile(e) {
-    let inputEl = e.target;
-    let path: string = `${env.BASE_API}/art`;
-    let file: File = inputEl.files[0];
-    let data: any = { label: file.name };
-
-    if (this.clipartService.toolActive) {
-      data.type = "clipart";
-    } else if (this.bgTextureService.toolActive) {
-      data.type = "texture";
-    }
-
-    this.uploadService.makeFileRequest(path, file, data)
-      .then(() => console.log("file uploaded"))
-      .then(() => {
-        this.clipartService.getAllArt();
-        this.bgTextureService.getAllArt();
-      })
-      .catch(() => console.log("file not uploaded"));
+    this.paletteActionCreators.toggleCursorSwatchBinding();
   }
 }

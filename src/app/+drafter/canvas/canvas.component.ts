@@ -4,15 +4,15 @@ import {
   ViewEncapsulation, Input,
 } from "@angular/core";
 
+import { select } from "@angular-redux/store";
+import { Observable } from "rxjs/Observable";
+
 import { ActiveToolService } from "../services/active-tool/active-tool.service";
 import { ClickStateService } from "../services/click-state/click-state.service";
-import { ClipartService } from "../services/clipart/clipart.service";
 import { GridService } from "../services/grid/grid.service";
 import { MapViewCtxService } from "../services/map-view-ctx/map-view-ctx.service";
 import { RendererService } from "../services/renderer/renderer.service";
 import { ZoomService } from "../services/zoom/zoom.service";
-
-import { CursorImgComponent } from "../cursor-img/cursor-img.component";
 
 
 @Component({
@@ -25,14 +25,11 @@ export class CanvasComponent {
   @ViewChild("canvasRef", { read: ElementRef })
   public _canvas: ElementRef;
 
-  @Input("cursorImg") private cursorImg: CursorImgComponent;
-
   private resizeTimeout: any;
 
   constructor(
     private activeToolService: ActiveToolService,
     private clickStateService: ClickStateService,
-    private clipartService: ClipartService,
     private gridService: GridService,
     private mapViewCtxService: MapViewCtxService,
     private rendererService: RendererService,

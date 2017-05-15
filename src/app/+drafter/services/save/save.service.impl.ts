@@ -1,15 +1,17 @@
 import { Injectable } from "@angular/core";
+import { NgRedux } from "@angular-redux/store";
+
+import { AppStateStore } from "../../drafter.types";
 import { SaveService } from "./save.service";
-import { ClipartService } from "../clipart/clipart.service";
-import { BGTextureService } from "../bg-textures/bg-textures.service";
+import { PaperService } from "../paper/paper.service";
 
 
 @Injectable()
 export class ConcreteSaveService implements SaveService {
 
   constructor(
-    private clipartService: ClipartService,
-    private bgTextureService: BGTextureService,
+    private ngRedux: NgRedux<AppStateStore>,
+    private paperService: PaperService,
   ) { }
 
   public save(): void {
@@ -17,7 +19,7 @@ export class ConcreteSaveService implements SaveService {
     if (this.savedMaps()) {
       existingMaps = JSON.parse(this.savedMaps());
     }
-    existingMaps.push(this.clipartService.getPaper());
+    existingMaps.push(this.paperService.get());
     localStorage.setItem("vp-battlemaps", JSON.stringify(existingMaps));
   }
 
@@ -25,7 +27,7 @@ export class ConcreteSaveService implements SaveService {
     let maps: any = [];
     if (this.savedMaps()) {
       maps = JSON.parse(this.savedMaps());
-      this.clipartService.setPaper(maps[index]);
+      this.paperService.set(maps[index]);
     }
   }
 

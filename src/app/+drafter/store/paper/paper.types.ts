@@ -4,7 +4,6 @@ export type DrawnItem = {
   realX: number;
   realY: number;
   realZoom: number;
-  zoomLevel: number;
   src: string;
 }
 
