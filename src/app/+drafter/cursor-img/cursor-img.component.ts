@@ -33,6 +33,8 @@ export class CursorImgComponent {
   public displayCursorIfPossible: boolean = true;
   public isToolActive: boolean = false;
   public drawing: boolean = false;
+  public cursorWidth: number = 100;
+  public cursorHeight: number = 100;
 
   constructor(
     private clickStateService: ClickStateService,
@@ -45,6 +47,10 @@ export class CursorImgComponent {
   public ngAfterViewInit() {
     this.palette.subscribe((state: Palette) => {
       this.url = state.selectedSwatchUrl;
+      let img = new Image(100, 100);
+      img.src = this.url;
+      this.cursorHeight = img.height;
+      this.cursorWidth = img.width;
       this.isToolActive = Object.keys(state.types).some((paletteType) => state.types[paletteType].active);
       this.displayCursorIfPossible = state.bindSwatchToCursor;
     });
@@ -77,8 +83,8 @@ export class CursorImgComponent {
   public onMouseDown(e) {
     this.drawing = true;
     if (this.isToolActive) {
-      let realX = e.clientX - (this.el.width / 2) + (this.mapViewCtxService.offsetX * -1);
-      let realY = e.clientY - (this.el.height / 2) + (this.mapViewCtxService.offsetY * -1);
+      let realX = e.clientX - (this.cursorWidth / 2) + (this.mapViewCtxService.offsetX * -1);
+      let realY = e.clientY - (this.cursorHeight / 2) + (this.mapViewCtxService.offsetY * -1);
       if (realX % 2 !== 0) {
         realX += 1;
       }
@@ -86,9 +92,9 @@ export class CursorImgComponent {
         realY += 1;
       }
       this.paperActionCreators.drawArtToPaper({
-        src: this.el.src,
-        realHeight: this.el.height / this.zoomService.zoomLevel,
-        realWidth: this.el.width / this.zoomService.zoomLevel,
+        src: this.url,
+        realHeight: this.cursorHeight / this.zoomService.zoomLevel,
+        realWidth: this.cursorWidth / this.zoomService.zoomLevel,
         realX: realX,
         realY: realY,
         realZoom: this.zoomService.zoomLevel,
@@ -101,13 +107,18 @@ export class CursorImgComponent {
     this.drawing = false;
   }
 
+  public evNum: number = 0;
   public onMouseMove(e) {
-    if (this.isToolActive &&
-      !!this.isCursorImageInitialized) {
-      this.followCursor(e);
-    }
-    if (!!this.drawing) {
-      this.onMouseDown(e);
+    if (this.isToolActive) {
+      if (!this.drawing && !!this.isCursorImageInitialized) {
+        this.followCursor(e);
+      } else if (!!this.drawing) {
+        this.evNum += 1;
+        if (this.evNum % 10 === 0) {
+          this.onMouseDown(e);
+          this.evNum = 0;
+        }
+      }
     }
   }
 

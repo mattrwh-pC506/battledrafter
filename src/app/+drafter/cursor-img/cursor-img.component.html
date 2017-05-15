@@ -1,12 +1,13 @@
 <!--Transient Cursor Image-->
+<span (window:mousedown)="onMouseDown($event)"
+      (window:mouseup)="onMouseUp()"
+      (window:mousemove)="onMouseMove($event)">
+</span>
 <img #cursorImg
      class="c-canvas-tool-cursor"
      [style.top.px]="iconImageTop - (cursorImg.height / 2)"
      [style.left.px]="iconImageLeft - (cursorImg.width / 2)"
      [height]="'100px'"
      [width]="'100px'"
-     *ngIf="displayCursorImage"
-     (window:mousedown)="onMouseDown($event)"
-     (window:mouseup)="onMouseUp()"
-     (window:mousemove)="onMouseMove($event)"
+     *ngIf="displayCursorImage && !drawing"
      [src]="url" />
