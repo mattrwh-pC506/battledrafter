@@ -1,6 +1,6 @@
 # Battledrafter 
 
-Find the Battledrafter API [here](https://github.com/mattrwh/battledrafter_api).
+Find the Battledrafter Website [here](https://mattrwh.github.io/battledrafter) and the backend API [here](https://github.com/mattrwh/battledrafter_api).
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.28.3.
 
